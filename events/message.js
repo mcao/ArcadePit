@@ -1,6 +1,6 @@
 // The MESSAGE event runs anytime a message is received
 module.exports = (client, message) => {
-  if (message.author.bot) return;
+  if (message.author.bot || !message.guild) return;
   const settings = client.config.settings;
 
   if (message.content.indexOf(settings.prefix) !== 0) return;
@@ -11,8 +11,9 @@ module.exports = (client, message) => {
 
   if (!cmd) return;
 
-  if (cmd && !message.guild && cmd.conf.guildOnly)
-    return message.channel.send('This command is unavailable via private message. Please run this command in a guild.');
+  if (level < client.levelCache[cmd.conf.permLevel]) {
+    return;
+  }
 
   message.author.permLevel = level;
 
@@ -20,6 +21,7 @@ module.exports = (client, message) => {
   while (args[0] && args[0][0] === '-') {
     message.flags.push(args.shift().slice(1));
   }
+
   client.logger.cmd(`[CMD] ${client.config.permLevels.find(l => l.level === level).name} ${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`);
   cmd.run(client, message, args, level);
 };

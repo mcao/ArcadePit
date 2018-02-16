@@ -10,6 +10,7 @@ require('./modules/functions.js')(client);
 
 client.config = require('./config.js');
 client.logger = require('./util/Logger');
+client.database = require('./util/Database');
 client.commands = new Enmap();
 client.aliases = new Enmap();
 
@@ -36,6 +37,9 @@ const init = async () => {
     const thisLevel = client.config.permLevels[i];
     client.levelCache[thisLevel.name] = thisLevel.level;
   }
+
+  client.database.initialize();
+
   client.login(client.config.token);
 };
 
