@@ -10,11 +10,11 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
     msg.channel.send(':x: I don\'t have permissions to edit the role `' + role + '`, please check the role order!');
   } else {
     if (msg.member.roles.has(role.id)) {
-      msg.member.removeRole(role).then(() => {
+      msg.member.roles.remove(role).then(() => {
         msg.reply('you\'re no longer a racer!');
       }).catch(console.error);
     } else {
-      msg.member.addRole(role).then(() => {
+      msg.member.roles.add(role).then(() => {
         msg.reply('you\'re now a racer!');
       }).catch(console.error);
     }
