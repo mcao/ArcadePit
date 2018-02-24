@@ -6,19 +6,19 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
 
   var role = msg.guild.roles.get('380910598742999050');
 
-  if (msg.guild.me.highestRole.comparePositionTo(role) < 1) {
+  if (!role.editable) {
     msg.channel.send(':x: I don\'t have permissions to edit the role `' + role + '`, please check the role order!');
   } else {
-    if (m.roles.has(role.id)) {
-      msg.member.removeRole(role).then(m => {
+    if (msg.member.roles.has(role.id)) {
+      msg.member.removeRole(role).then(() => {
         msg.reply('you\'re no longer a ' + role.name + '!');
       }).catch(console.error);
     } else {
-      msg.member.addRole(role).then(m => {
+      msg.member.addRole(role).then(() => {
         msg.reply('you\'re now a ' + role.name + '!');
       }).catch(console.error);
     }
-  };
+  }
 
   exports.conf = {
     enabled: true,
@@ -33,3 +33,4 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
     description: 'Gives the user the racer role.',
     usage: 'racer'
   };
+};
