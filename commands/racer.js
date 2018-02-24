@@ -19,18 +19,18 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
       }).catch(console.error);
     }
   }
+};
 
-  exports.conf = {
-    enabled: true,
-    guildOnly: true,
-    aliases: [],
-    permLevel: 'User'
-  };
+exports.conf = {
+  enabled: true,
+  guildOnly: true,
+  aliases: [],
+  permLevel: 'User'
+};
 
-  exports.help = {
-    name: 'racer',
-    category: 'Racing',
-    description: 'Gives the user the racer role.',
-    usage: 'racer'
-  };
+exports.help = {
+  name: 'racer',
+  category: 'Racing',
+  description: 'Gives the user the racer role.',
+  usage: 'racer'
 };
