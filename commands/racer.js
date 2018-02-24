@@ -11,11 +11,11 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
   } else {
     if (msg.member.roles.has(role.id)) {
       msg.member.removeRole(role).then(() => {
-        msg.reply('you\'re no longer a ' + role.name + '!');
+        msg.reply('you\'re no longer a racer!');
       }).catch(console.error);
     } else {
       msg.member.addRole(role).then(() => {
-        msg.reply('you\'re now a ' + role.name + '!');
+        msg.reply('you\'re now a racer!');
       }).catch(console.error);
     }
   }
