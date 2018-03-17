@@ -14,8 +14,8 @@ exports.conf = {
 };
 
 exports.help = {
-  name: 'restart',
+  name: 'restartbot',
   category: 'System',
   description: 'Shuts down the bot. If running under PM2, bot will restart automatically.',
-  usage: 'restart'
+  usage: 'restartbot'
 };

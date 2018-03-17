@@ -7,12 +7,12 @@ exports.conf = {
   enabled: true,
   guildOnly: true,
   aliases: [],
-  permLevel: 'User'
+  permLevel: 'Bot Admin'
 };
 
 exports.help = {
   name: 'mylevel',
-  category: 'Miscelaneous',
+  category: 'System',
   description: 'Tells you your permission level for the current message location.',
   usage: 'mylevel'
 };
