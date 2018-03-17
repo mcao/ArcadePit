@@ -10,7 +10,7 @@ const sequelize = new Sequelize('tie', 'tie', 'burger1', { // eslint-disable-lin
 });
 
 const Events = sequelize.define('events', {
-  id: { type: Sequelize.INTEGER, autoIncrement: true, unique: true },
+  id: { type: Sequelize.INTEGER, autoIncrement: true, unique: true, primaryKey: true },
   name: { type: Sequelize.STRING, allowNull: false, unique: true },
   creator: { type: Sequelize.STRING, allowNull: false },
   time: { type: Sequelize.DATE, allowNull: false, unique: true },
