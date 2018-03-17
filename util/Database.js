@@ -9,6 +9,24 @@ const sequelize = new Sequelize('tie', 'tie', 'burger1', { // eslint-disable-lin
   dialect: 'postgres'
 });
 
+const Events = sequelize.define('events', { // eslint-disable-line no-unused-vars
+  id: { type: Sequelize.INTEGER, autoIncrement: true, unique: true },
+  name: { type: Sequelize.STRING, allowNull: false, unique: true },
+  creator: { type: Sequelize.STRING, allowNull: false },
+  time: { type: Sequelize.DATE, allowNull: false, unique: true },
+  participants: { type: Sequelize.ARRAY },
+  standings: { type: Sequelize.ARRAY },
+  timeStarted: { type: Sequelize.DATE },
+  timeEnded: { type: Sequelize.DATE },
+  started: { type: Sequelize.BOOLEAN },
+  ended: { type: Sequelize.BOOLEAN },
+  lastReminderSent: { type: Sequelize.INTEGER },
+  open: { type: Sequelize.BOOLEAN },
+  forciblyEnded: { type: Sequelize.BOOLEAN }
+});
+
+exports.Events = Events;
+
 exports.initialize = () => {
   sequelize
     .authenticate()
@@ -18,4 +36,33 @@ exports.initialize = () => {
     .catch(err => {
       console.error('Unable to connect to the database:', err);
     });
+
+  sequelize
+    .sync()
+    .then(() => {
+      console.log('Database Synchronized.');
+    })
+    .catch(err => {
+      console.error('Unable to synchronize with the database:', err);
+    });
+};
+
+exports.create = (data) => {
+  if (!data) throw new TypeError('Cannot create an event without data!');
+  if (!data.name) throw new TypeError('Cannot create an event without a name!');
+  if (!data.creator) throw new TypeError('Cannot create an event without a creator (User ID)!');
+  if (!data.time) throw new TypeError('Cannot create an event without a time (timestamp)!');
+
+  return Events.create({
+    name: data.name,
+    creator: data.creator,
+    time: data.time,
+    participants: [],
+    standings: [],
+    started: false,
+    ended: false,
+    lastReminderSent: 0,
+    open: false,
+    forciblyEnded: false
+  });
 };

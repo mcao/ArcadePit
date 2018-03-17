@@ -4,43 +4,43 @@ const Discord = require('discord.js');
 const { promisify } = require('util');
 const readdir = promisify(require('fs').readdir);
 const Enmap = require('enmap');
-const client = new Discord.Client();
+const bot = new Discord.Client();
 
-require('./modules/functions.js')(client);
+require('./modules/functions.js')(bot);
 
-client.config = require('./config.js');
-client.logger = require('./util/Logger');
-client.database = require('./util/Database');
-client.commands = new Enmap();
-client.aliases = new Enmap();
+bot.config = require('./config.js');
+bot.logger = require('./util/Logger');
+bot.database = require('./util/Database');
+bot.commands = new Enmap();
+bot.aliases = new Enmap();
 
 const init = async () => {
   const cmdFiles = await readdir('./commands/');
-  client.logger.log(`Loading ${cmdFiles.length} commands.`);
+  bot.logger.log(`Loading ${cmdFiles.length} commands.`);
   cmdFiles.forEach(f => {
     if (!f.endsWith('.js')) return;
-    const response = client.loadCommand(f);
+    const response = bot.loadCommand(f);
     if (response) console.log(response);
   });
 
   const evtFiles = await readdir('./events/');
-  client.logger.log(`Loading ${evtFiles.length} events.`);
+  bot.logger.log(`Loading ${evtFiles.length} events.`);
   evtFiles.forEach(file => {
     const eventName = file.split('.')[0];
     const event = require(`./events/${file}`);
-    client.on(eventName, event.bind(null, client));
+    bot.on(eventName, event.bind(null, bot));
     delete require.cache[require.resolve(`./events/${file}`)];
   });
 
-  client.levelCache = {};
-  for (let i = 0; i < client.config.permLevels.length; i++) {
-    const thisLevel = client.config.permLevels[i];
-    client.levelCache[thisLevel.name] = thisLevel.level;
+  bot.levelCache = {};
+  for (let i = 0; i < bot.config.permLevels.length; i++) {
+    const thisLevel = bot.config.permLevels[i];
+    bot.levelCache[thisLevel.name] = thisLevel.level;
   }
 
-  client.database.initialize();
+  bot.database.initialize();
 
-  client.login(client.config.token);
+  bot.login(bot.config.token);
 };
 
 init();
