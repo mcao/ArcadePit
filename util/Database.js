@@ -53,7 +53,7 @@ exports.create = (data) => {
   if (!data.name) throw new TypeError('Cannot create an event without a name!');
   if (!data.creator) throw new TypeError('Cannot create an event without a creator (User ID)!');
   if (!data.time) throw new TypeError('Cannot create an event without a time (timestamp)!');
-  if (!data.timed) throw new TypeError('Cannot create an event without knowing whether it\'s timed!');
+  if (data.timed == undefined) throw new TypeError('Cannot create an event without knowing whether it\'s timed!');
 
   return Events.create({
     name: data.name,
