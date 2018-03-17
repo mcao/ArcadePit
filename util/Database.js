@@ -59,6 +59,7 @@ exports.create = (data) => {
     name: data.name,
     creator: data.creator,
     time: data.time,
+    timed: data.timed,
     participants: [],
     standings: [],
     started: false,
