@@ -14,6 +14,7 @@ const Events = sequelize.define('events', {
   name: { type: Sequelize.STRING, allowNull: false, unique: true },
   creator: { type: Sequelize.STRING, allowNull: false },
   time: { type: Sequelize.DATE, allowNull: false, unique: true },
+  timed: { type: Sequelize.BOOLEAN },
   participants: { type: Sequelize.ARRAY({ type: Sequelize.STRING }) },
   standings: { type: Sequelize.ARRAY({ type: Sequelize.STRING }) },
   timeStarted: { type: Sequelize.DATE },
@@ -52,6 +53,7 @@ exports.create = (data) => {
   if (!data.name) throw new TypeError('Cannot create an event without a name!');
   if (!data.creator) throw new TypeError('Cannot create an event without a creator (User ID)!');
   if (!data.time) throw new TypeError('Cannot create an event without a time (timestamp)!');
+  if (!data.timed) throw new TypeError('Cannot create an event without knowing whether it\'s timed!');
 
   return Events.create({
     name: data.name,
