@@ -8,7 +8,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
       .setTimestamp();
 
     for (var i = 0; i < events.length; i++) {
-      embed.addField(`${events[i].id}: ${events[i].name}, ${events[i].timed ? 'Timed' : 'Scored'} (${events[i].participants.length} Participants)`, events[0].time);
+      embed.addField(`${events[i].id}: ${events[i].name}, ${events[i].timed ? 'Timed' : 'Scored'} (${events[i].participants.length} Participants)`, events[i].time);
     }
 
     msg.channel.send({ embed: embed });
