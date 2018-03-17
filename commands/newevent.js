@@ -20,7 +20,8 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
     bot.database.create({
       name: eventName,
       creator: msg.author.id,
-      time: eventTime
+      time: eventTime,
+      timed: eventTimed,
     }).then(() => {
       msg.reply('event successfully created!');
     });
