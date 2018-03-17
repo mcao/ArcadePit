@@ -9,7 +9,7 @@ const sequelize = new Sequelize('tie', 'tie', 'burger1', { // eslint-disable-lin
   dialect: 'postgres'
 });
 
-const Events = sequelize.define('events', { // eslint-disable-line no-unused-vars
+const Events = sequelize.define('events', {
   id: { type: Sequelize.INTEGER, autoIncrement: true, unique: true },
   name: { type: Sequelize.STRING, allowNull: false, unique: true },
   creator: { type: Sequelize.STRING, allowNull: false },
