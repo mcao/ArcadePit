@@ -2,8 +2,6 @@ const { MessageEmbed } = require('discord.js');
 
 exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unused-vars
   bot.database.Events.findAll({ where: { started: false } }).then(events => {
-    msg.channel.send(JSON.stringify(events, null, '\t'));
-
     var embed = new MessageEmbed()
       .setAuthor('Upcoming Racing Events', bot.user.displayAvatarURL())
       .setFooter(msg.guild.name, msg.guild.iconURL())
