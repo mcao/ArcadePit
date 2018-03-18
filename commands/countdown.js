@@ -10,7 +10,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
     msg.channel.send('2!');
   }, 3000);
   setTimeout(() => {
-    msg.msg.channel.send('1!');
+    msg.channel.send('1!');
   }, 4000);
   setTimeout(() => {
     msg.channel.send('**GO!**');
