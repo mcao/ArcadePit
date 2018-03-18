@@ -25,7 +25,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
     }).then(() => {
       msg.reply('event successfully created!');
     }).catch(err => {
-      msg.channel.send(err.parent.detail);
+      msg.channel.send('ERROR: ' + err.parent.detail);
     });
   }
 };
