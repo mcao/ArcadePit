@@ -1,8 +1,7 @@
 exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unused-vars
   msg.channel.send('5!');
-  setTimeout(() => {
-    msg.channel.send('4!');
-  }, 1000);
+  await bot.wait(1000);
+  msg.channel.send('4!');
   setTimeout(() => {
     msg.channel.send('3!');
   }, 2000);
