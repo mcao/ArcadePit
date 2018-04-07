@@ -24,7 +24,19 @@ const Events = sequelize.define('events', {
   lastReminderSent: { type: Sequelize.INTEGER },
   open: { type: Sequelize.BOOLEAN },
   forciblyEnded: { type: Sequelize.BOOLEAN }
+}, {
+  getterMethods: {
+    externalID: function() { return this.id % 100; }
+  }
 });
+
+async function getEvent(nameOrID) {
+  if (!isNaN(nameOrID)) {
+    return await Events.findOne({ where: { id: nameOrID } });
+  } else {
+    return await Events.findOne({ where: { name: nameOrID } });
+  }
+}
 
 exports.Events = Events;
 
@@ -60,12 +72,30 @@ exports.create = (data) => {
     creator: data.creator,
     time: data.time,
     timed: data.timed,
-    participants: [],
+    participants: {},
     standings: [],
     started: false,
     ended: false,
     lastReminderSent: 0,
     open: false,
     forciblyEnded: false
+  });
+};
+
+exports.add = async (user, eventName) => {
+  var event = await getEvent(eventName),
+    participants = event.participants;
+  if (!participants[user.id]) {
+    participants[user.id] = {
+      ready: false,
+      started: false,
+      finished: false,
+      time: 0
+    };
+  }
+  return await Events.update({
+    participants: participants
+  }, {
+    where: { id: event.id }
   });
 };
