@@ -34,7 +34,8 @@ async function getEvent(nameOrID) {
   if (!isNaN(nameOrID)) {
     var events = await Events.findAll({ where: { ended: false } });
     events.forEach(event => {
-      if (event.externalID == Number(nameOrID)) return event;
+      console.log(event.externalID === Number(nameOrID));
+      if (event.externalID === Number(nameOrID)) return event;
     });
     return null;
   } else {
@@ -88,7 +89,6 @@ exports.create = (data) => {
 
 exports.add = async (user, eventName) => {
   var event = await getEvent(eventName);
-  console.log(event);
   if (event && event.open) {
     var participants = event.participants || {};
 
