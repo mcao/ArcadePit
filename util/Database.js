@@ -23,7 +23,7 @@ const Events = sequelize.define('events', {
   ended: { type: Sequelize.BOOLEAN },
   lastReminderSent: { type: Sequelize.INTEGER },
   open: { type: Sequelize.BOOLEAN },
-  forciblyEnded: { type: Sequelize.BOOLEAN }
+  forciblyEnded: { type: Sequelize.BOOLEAN },
 }, {
   getterMethods: {
     externalID: function() { return this.id % 100; }
@@ -32,9 +32,9 @@ const Events = sequelize.define('events', {
 
 async function getEvent(nameOrID) {
   if (!isNaN(nameOrID)) {
-    return await Events.findOne({ where: { id: nameOrID } });
+    return await Events.findOne({ where: { externalID: nameOrID, open: true } });
   } else {
-    return await Events.findOne({ where: { name: nameOrID } });
+    return await Events.findOne({ where: { name: nameOrID, open: true } });
   }
 }
 
@@ -83,19 +83,27 @@ exports.create = (data) => {
 };
 
 exports.add = async (user, eventName) => {
-  var event = await getEvent(eventName),
-    participants = event.participants;
-  if (!participants[user.id]) {
-    participants[user.id] = {
-      ready: false,
-      started: false,
-      finished: false,
-      time: 0
-    };
+  var event = await getEvent(eventName);
+  if (event) {
+    var participants = event.participants || {};
+
+    if (!participants[user.id]) {
+      participants[user.id] = {
+        ready: false,
+        started: false,
+        finished: false,
+        time: 0
+      };
+      Events.update({
+        participants: participants
+      }, {
+        where: { id: event.id }
+      });
+      return 'successfully added ' + user.username + ' to the ' + event.name + ' race!';
+    } else {
+      return user.username + ' is already in this race!';
+    }
+  } else {
+    return 'event not found!';
   }
-  return await Events.update({
-    participants: participants
-  }, {
-    where: { id: event.id }
-  });
 };
