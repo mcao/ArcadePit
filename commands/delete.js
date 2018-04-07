@@ -19,6 +19,6 @@ exports.conf = {
 exports.help = {
   name: 'delete',
   category: 'Tech',
-  description: '',
+  description: 'Deletes an event from the event list.',
   usage: 'delete <eventName>'
 };
