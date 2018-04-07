@@ -94,7 +94,7 @@ exports.add = async (user, eventName) => {
         finished: false,
         time: 0
       };
-      Events.update({
+      await Events.update({
         participants: participants
       }, {
         where: { id: event.id }
