@@ -32,9 +32,9 @@ const Events = sequelize.define('events', {
 
 async function getEvent(nameOrID) {
   if (!isNaN(nameOrID)) {
-    return await Events.findOne({ where: { externalID: nameOrID, open: true } });
+    return await Events.findOne({ where: { externalID: nameOrID, ended: false } });
   } else {
-    return await Events.findOne({ where: { name: nameOrID, open: true } });
+    return await Events.findOne({ where: { name: nameOrID, ended: false } });
   }
 }
 
@@ -84,7 +84,7 @@ exports.create = (data) => {
 
 exports.add = async (user, eventName) => {
   var event = await getEvent(eventName);
-  if (event) {
+  if (event && event.open) {
     var participants = event.participants || {};
 
     if (!participants[user.id]) {
@@ -103,6 +103,8 @@ exports.add = async (user, eventName) => {
     } else {
       return user.username + ' is already in this race!';
     }
+  } else if (event && !event.open) {
+    return 'that event is not open yet!';
   } else {
     return 'event not found!';
   }
