@@ -15,7 +15,7 @@ const Events = sequelize.define('events', {
   creator: { type: Sequelize.STRING, allowNull: false },
   time: { type: Sequelize.DATE, allowNull: false, unique: true },
   timed: { type: Sequelize.BOOLEAN },
-  participants: { type: Sequelize.ARRAY({ type: Sequelize.STRING }) },
+  participants: { type: Sequelize.JSON },
   standings: { type: Sequelize.ARRAY({ type: Sequelize.STRING }) },
   timeStarted: { type: Sequelize.DATE },
   timeEnded: { type: Sequelize.DATE },

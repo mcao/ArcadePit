@@ -13,6 +13,6 @@ exports.conf = {
 exports.help = {
   name: 'ping',
   category: 'System',
-  description: 'It... like... pings. Then Pongs. And it\'s not Ping Pong.',
+  description: 'Tests the bot\'s latency',
   usage: 'ping'
 };

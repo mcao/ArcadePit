@@ -5,10 +5,11 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
     var embed = new MessageEmbed()
       .setAuthor('Upcoming Racing Events', bot.user.displayAvatarURL())
       .setFooter(msg.guild.name, msg.guild.iconURL())
-      .setTimestamp();
+      .setTimestamp()
+      .setColor(msg.guild.me.displayHexColor);
 
     for (var i = 0; i < events.length; i++) {
-      embed.addField(`${events[i].id}: ${events[i].name}, ${events[i].timed ? 'Timed' : 'Scored'} (${events[i].participants.length} Participants)`, events[i].time);
+      embed.addField(`${events[i].id}: ${events[i].name} - ${events[i].timed ? 'Timed' : 'Scored'} (${events[i].participants.length} Participants)`, events[i].time);
     }
 
     msg.channel.send({ embed: embed });
