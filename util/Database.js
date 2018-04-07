@@ -33,9 +33,10 @@ const Events = sequelize.define('events', {
 async function getEvent(nameOrID) {
   if (!isNaN(nameOrID)) {
     var events = await Events.findAll({ where: { ended: false } });
-    events.forEach(event => {
-      console.log(event.externalID === Number(nameOrID));
-      if (event.externalID === Number(nameOrID)) return event;
+    await events.forEach(event => {
+      if (event.externalID === Number(nameOrID)) {
+        return event;
+      }
     });
     return null;
   } else {
