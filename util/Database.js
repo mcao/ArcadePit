@@ -35,7 +35,7 @@ async function getEvent(nameOrID) {
     var events = await Events.findAll({ where: { ended: false } });
     events.forEach(event => {
       console.log(event.externalID);
-      if (event.externalID == nameOrID) return event;
+      if (event.externalID == Number(nameOrID)) return event;
     });
     return null;
   } else {
