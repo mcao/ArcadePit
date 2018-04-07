@@ -34,7 +34,7 @@ async function getEvent(nameOrID) {
   if (!isNaN(nameOrID)) {
     var events = await Events.findAll({ where: { ended: false } });
     events.forEach(event => {
-      console.log(event.externalID);
+      console.log(nameOrID);
       if (event.externalID == Number(nameOrID)) return event;
     });
     return null;
