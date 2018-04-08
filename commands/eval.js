@@ -23,7 +23,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
       }
     }
   } catch (error) {
-    msg.channel.send(`The following error occured \`\`\`js\n${error.stack}\`\`\``);
+    msg.channel.send(`The following error occured: \`\`\`js\n${error.stack}\`\`\``);
   }
 
   function clean(text)  {
