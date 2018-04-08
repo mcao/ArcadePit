@@ -7,7 +7,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
   const rev = bot.token.split('').reverse().join('[^]{0,2}');
   const filter = new RegExp(`${token}|${rev}`, 'g');
   try {
-    let output = eval(code);
+    let output = eval('async function() {' + code + '}');
     if (output instanceof Promise || (Boolean(output) && typeof output.then === 'function' && typeof output.catch === 'function')) output = await output;
     output = inspect(output, { depth: 0, maxArrayLength: null });
     output = output.replace(filter, '[TOKEN]');
