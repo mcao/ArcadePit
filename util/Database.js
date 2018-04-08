@@ -30,6 +30,8 @@ const Events = sequelize.define('events', {
   }
 });
 
+exports.Events = Events;
+
 async function getEvent(nameOrID) {
   if (!isNaN(nameOrID)) {
     var events = await Events.findAll({ where: { ended: false } });
@@ -42,8 +44,6 @@ async function getEvent(nameOrID) {
     return await Events.findOne({ where: { name: nameOrID, ended: false } });
   }
 }
-
-exports.Events = Events;
 
 exports.initialize = () => {
   sequelize
@@ -107,6 +107,29 @@ exports.add = async (user, eventName) => {
       return 'successfully added ' + user.username + ' to the ' + event.name + ' race!';
     } else {
       return user.username + ' is already in this race!';
+    }
+  } else if (event && !event.open) {
+    return 'that event is not open yet!';
+  } else {
+    return 'event not found!';
+  }
+};
+
+exports.remove = async (user, eventName) => {
+  var event = await getEvent(eventName);
+  if (event && event.open) {
+    var participants = event.participants || {};
+
+    if (participants[user.id]) {
+      delete participants[user.id];
+      await Events.update({
+        participants: participants
+      }, {
+        where: { id: event.id }
+      });
+      return 'successfully removed ' + user.username + ' from the ' + event.name + ' race!';
+    } else {
+      return user.username + ' is not in this race!';
     }
   } else if (event && !event.open) {
     return 'that event is not open yet!';
