@@ -1,4 +1,60 @@
 module.exports = (client) => {
+  const moment = require('moment');
+
+  client.startWatchdog = async (client) => {
+    client.logger.log('Watchdog Started.');
+    async function checkForEvent(client) {
+      var events = await client.database.Events.findAll({ where: { started: false } });
+      for (var i = 0; i < events.length; i++) {
+        var date = new Date(events[i].time),
+          timeAway = date - new Date();
+        
+        if (timeAway < 86400000 && events[i].lastReminderSent < 1) {
+          sendReminder(events[i].name, date);
+          await client.database.Events.update({
+            lastReminderSent: 1
+          }, {
+            where: { id: events[i].id }
+          });
+        } if (timeAway < 86400000 && events[i].lastReminderSent < 2) {
+          sendReminder(events[i].name, date);
+          await client.database.Events.update({
+            lastReminderSent: 2
+          }, {
+            where: { id: events[i].id }
+          });
+        } if (timeAway < 1800000 && !events[i].open) {
+          client.channels.get(client.config.raceChannel).send(`<@&380910598742999050>: **${events[i]}** is now open to join!`);
+          await client.database.Events.update({
+            open: true
+          }, {
+            where: { id: events[i].id }
+          });
+        } if (timeAway < 600000 && events[i].lastReminderSent < 3) {
+          sendReminder(events[i].name, date);
+          await client.database.Events.update({
+            lastReminderSent: 3
+          }, {
+            where: { id: events[i].id }
+          });
+        } if (timeAway < 300000 && events[i].lastReminderSent < 4) {
+          sendReminder(events[i].name, date);
+          await client.database.Events.update({
+            lastReminderSent: 4
+          }, {
+            where: { id: events[i].id }
+          });
+          setTimeout(client.startEvent(), timeAway);
+        } 
+      }
+    }
+    await checkForEvent(client);
+    setInterval(await checkForEvent(), 30000);
+
+    function sendReminder(event, date) {
+      client.channels.get(client.config.raceChannel).send(`<@&380910598742999050>: **${event}** is starting **${moment(new Date(date).toISOString()).fromNow()}!**`);
+    }
+  };
 
   /*
   PERMISSION LEVEL FUNCTION
@@ -46,29 +102,6 @@ module.exports = (client) => {
     }
   };
 
-
-  /*
-  MESSAGE CLEAN FUNCTION
-
-  "Clean" removes @everyone pings, as well as tokens, and makes code blocks
-  escaped so they're shown more easily. As a bonus it resolves promises
-  and stringifies objects!
-  This is mostly only used by the Eval and Exec commands.
-  */
-  client.clean = async (client, text) => {
-    if (text && text.constructor.name == 'Promise')
-      text = await text;
-    if (typeof evaled !== 'string')
-      text = require('util').inspect(text, {depth: 0});
-
-    text = text
-      .replace(/`/g, '`' + String.fromCharCode(8203))
-      .replace(/@/g, '@' + String.fromCharCode(8203))
-      .replace(client.token, 'mfa.VkO_2G4Qv3T--NO--lWetW_tjND--TOKEN--QFTm6YGtzq9PH--4U--tG0');
-
-    return text;
-  };
-
   client.loadCommand = (commandName) => {
     try {
       const props = require(`../commands/${commandName}`);
@@ -94,7 +127,7 @@ module.exports = (client) => {
       command = client.commands.get(client.aliases.get(commandName));
     }
     if (!command) return `The command \`${commandName}\` doesn't seem to exist, nor is it an alias. Try again!`;
-  
+
     if (command.shutdown) {
       await command.shutdown(client);
     }
@@ -107,17 +140,14 @@ module.exports = (client) => {
   // <String>.toPropercase() returns a proper-cased string such as: 
   // "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"
   String.prototype.toProperCase = function() {
-    return this.replace(/([^\W_]+[^\s-]*) */g, function(txt) {return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-  };    
-  
+    return this.replace(/([^\W_]+[^\s-]*) */g, function(txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+  };
+
   // <Array>.random() returns a single random element from an array
   // [1, 2, 3, 4, 5].random() can return 1, 2, 3, 4 or 5.
   Array.prototype.random = function() {
     return this[Math.floor(Math.random() * this.length)];
   };
-
-  // `await client.wait(1000);` to "pause" for 1 second.
-  client.wait = require('util').promisify(setTimeout);
 
   process.on('uncaughtException', (err) => {
     const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, 'g'), './');
