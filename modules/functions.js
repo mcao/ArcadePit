@@ -16,7 +16,7 @@ module.exports = (client) => {
           }, {
             where: { id: events[i].id }
           });
-        } if (timeAway < 86400000 && events[i].lastReminderSent < 2) {
+        } if (timeAway < 3600000 && events[i].lastReminderSent < 2) {
           sendReminder(events[i].name, date);
           await client.database.Events.update({
             lastReminderSent: 2
