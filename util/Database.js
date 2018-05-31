@@ -25,10 +25,10 @@ const Events = sequelize.define('events', {
   open: { type: Sequelize.BOOLEAN },
   forciblyEnded: { type: Sequelize.BOOLEAN },
 }, {
-  getterMethods: {
-    externalID: function() { return this.id % 100; }
-  }
-});
+    getterMethods: {
+      externalID: function () { return this.id % 100; }
+    }
+  });
 
 exports.Events = Events;
 
@@ -102,8 +102,8 @@ exports.add = async (user, eventName) => {
       await Events.update({
         participants: participants
       }, {
-        where: { id: event.id }
-      });
+          where: { id: event.id }
+        });
       return 'successfully added ' + user.username + ' to the ' + event.name + ' race!';
     } else {
       return user.username + ' is already in this race!';
@@ -125,14 +125,34 @@ exports.remove = async (user, eventName) => {
       await Events.update({
         participants: participants
       }, {
-        where: { id: event.id }
-      });
+          where: { id: event.id }
+        });
       return 'successfully removed ' + user.username + ' from the ' + event.name + ' race!';
     } else {
       return user.username + ' is not in this race!';
     }
   } else if (event && !event.open) {
     return 'that event is not open yet!';
+  } else {
+    return 'event not found!';
+  }
+};
+
+exports.cancel = async (eventName) => {
+  var event = await getEvent(eventName);
+
+  if (event && !event.started) {
+    await Events.update({
+      started: true,
+      ended: true,
+      open: false,
+      forciblyEnded: true,
+    }, {
+        where: { id: event.id }
+      });
+    return `successfully cancelled the **${event.name}** race!`;
+  } else if (event && event.started) {
+    return 'that event has already begun!';
   } else {
     return 'event not found!';
   }
