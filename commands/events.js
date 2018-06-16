@@ -4,6 +4,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
   bot.database.Events.findAll({ where: { started: false } }).then(events => {
     var embed = new MessageEmbed()
       .setAuthor('Upcoming Racing Events', bot.user.displayAvatarURL())
+      .setDescription('*Do .join <id-or-event-name> to join a race!*')
       .setFooter(msg.guild.name, msg.guild.iconURL())
       .setTimestamp()
       .setColor(msg.guild.me.displayHexColor);

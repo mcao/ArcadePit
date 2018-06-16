@@ -1,58 +1,77 @@
-module.exports = (client) => {
+module.exports = (bot) => {
   const moment = require('moment');
 
-  client.startWatchdog = async (client) => {
-    client.logger.log('Watchdog Started.');
-    async function checkForEvent(client) {
-      var events = await client.database.Events.findAll({ where: { started: false } });
+  bot.startEvent = async (bot, e) => {
+    var event = await bot.database.Events.findOne({ where: { id: e.id } }),
+      allReady = true;
+    event.participants.forEach(participant => {
+      if (!participant.ready) {
+        allReady = false;
+      }
+    });
+
+    if (allReady) {
+      bot.logger.log('All participants are ready. Starting event...');
+      // Extend functionality
+    }
+  };
+
+  /*
+  Function that executes every 30 seconds and checks if reminders 
+    need to be sent and/or the event needs to be opened or started.
+  */
+  bot.startWatchdog = async (bot) => {
+    bot.logger.log('Watchdog Started.');
+    async function checkForEvent(bot) {
+      var events = await bot.database.Events.findAll({ where: { started: false } });
       for (var i = 0; i < events.length; i++) {
         var date = new Date(events[i].time),
           timeAway = date - new Date();
         
         if (timeAway < 86400000 && events[i].lastReminderSent < 1) {
           sendReminder(events[i].name, date);
-          await client.database.Events.update({
+          await bot.database.Events.update({
             lastReminderSent: 1
           }, {
             where: { id: events[i].id }
           });
         } if (timeAway < 86400000 && events[i].lastReminderSent < 2) {
           sendReminder(events[i].name, date);
-          await client.database.Events.update({
+          await bot.database.Events.update({
             lastReminderSent: 2
           }, {
             where: { id: events[i].id }
           });
         } if (timeAway < 1800000 && !events[i].open) {
-          client.channels.get(client.config.raceChannel).send(`<@&380910598742999050>: **${events[i]}** is now open to join!`);
-          await client.database.Events.update({
+          bot.channels.get(bot.config.raceChannel).send(`<@&380910598742999050>: You may now set yourself as ready for **${events[i]}**!`);
+          await bot.database.Events.update({
             open: true
           }, {
             where: { id: events[i].id }
           });
         } if (timeAway < 600000 && events[i].lastReminderSent < 3) {
           sendReminder(events[i].name, date);
-          await client.database.Events.update({
+          await bot.database.Events.update({
             lastReminderSent: 3
           }, {
             where: { id: events[i].id }
           });
         } if (timeAway < 300000 && events[i].lastReminderSent < 4) {
           sendReminder(events[i].name, date);
-          await client.database.Events.update({
+          await bot.database.Events.update({
             lastReminderSent: 4
           }, {
             where: { id: events[i].id }
           });
-          setTimeout(client.startEvent(), timeAway);
+          setTimeout(bot.startEvent(bot, events[i]), timeAway);
         } 
       }
     }
-    await checkForEvent(client);
+    await checkForEvent(bot);
     setInterval(await checkForEvent(), 30000);
 
     function sendReminder(event, date) {
-      client.channels.get(client.config.raceChannel).send(`<@&380910598742999050>: **${event}** is starting **${moment(new Date(date).toISOString()).fromNow()}!**`);
+      bot.channels.get(bot.config.raceChannel).send(`<@&380910598742999050>: **${event}** is starting **${moment(new Date(date).toISOString()).fromNow()}!**`);
     }
   };
 
@@ -65,10 +84,10 @@ module.exports = (client) => {
   command including the VERY DANGEROUS `eval` and `exec` commands!
 
   */
-  client.permlevel = message => {
+  bot.permlevel = message => {
     let permlvl = 0;
 
-    const permOrder = client.config.permLevels.slice(0).sort((p, c) => p.level > c.level ? 1 : -1);
+    const permOrder = bot.config.permLevels.slice(0).sort((p, c) => p.level > c.level ? 1 : -1);
 
     while (permOrder.length) {
       const currentLevel = permOrder.shift();
@@ -87,11 +106,11 @@ module.exports = (client) => {
 
   USAGE
 
-  const response = await client.awaitReply(msg, "Favourite Color?");
+  const response = await bot.awaitReply(msg, "Favourite Color?");
   msg.reply(`Oh, I really love ${response} too!`);
 
   */
-  client.awaitReply = async (msg, question, limit = 60000) => {
+  bot.awaitReply = async (msg, question, limit = 60000) => {
     const filter = m => m.author.id === msg.author.id;
     await msg.channel.send(question);
     try {
@@ -102,16 +121,16 @@ module.exports = (client) => {
     }
   };
 
-  client.loadCommand = (commandName) => {
+  bot.loadCommand = (commandName) => {
     try {
       const props = require(`../commands/${commandName}`);
-      client.logger.log(`Loading Command: ${props.help.name}`);
+      bot.logger.log(`Loading Command: ${props.help.name}`);
       if (props.init) {
-        props.init(client);
+        props.init(bot);
       }
-      client.commands.set(props.help.name, props);
+      bot.commands.set(props.help.name, props);
       props.conf.aliases.forEach(alias => {
-        client.aliases.set(alias, props.help.name);
+        bot.aliases.set(alias, props.help.name);
       });
       return false;
     } catch (e) {
@@ -119,17 +138,17 @@ module.exports = (client) => {
     }
   };
 
-  client.unloadCommand = async (commandName) => {
+  bot.unloadCommand = async (commandName) => {
     let command;
-    if (client.commands.has(commandName)) {
-      command = client.commands.get(commandName);
-    } else if (client.aliases.has(commandName)) {
-      command = client.commands.get(client.aliases.get(commandName));
+    if (bot.commands.has(commandName)) {
+      command = bot.commands.get(commandName);
+    } else if (bot.aliases.has(commandName)) {
+      command = bot.commands.get(bot.aliases.get(commandName));
     }
     if (!command) return `The command \`${commandName}\` doesn't seem to exist, nor is it an alias. Try again!`;
 
     if (command.shutdown) {
-      await command.shutdown(client);
+      await command.shutdown(bot);
     }
     delete require.cache[require.resolve(`../commands/${commandName}.js`)];
     return false;
@@ -151,11 +170,11 @@ module.exports = (client) => {
 
   process.on('uncaughtException', (err) => {
     const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, 'g'), './');
-    client.logger.error(`Uncaught Exception: ${errorMsg}`);
+    bot.logger.error(`Uncaught Exception: ${errorMsg}`);
     process.exit(1);
   });
 
   process.on('unhandledRejection', err => {
-    client.logger.error(`Unhandled rejection: ${err}`);
+    bot.logger.error(`Unhandled rejection: ${err}`);
   });
 };

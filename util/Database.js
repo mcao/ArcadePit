@@ -89,7 +89,7 @@ exports.create = (data) => {
 
 exports.add = async (user, eventName) => {
   var event = await getEvent(eventName);
-  if (event && event.open) {
+  if (event) {
     var participants = event.participants || {};
 
     if (!participants[user.id]) {
@@ -108,8 +108,6 @@ exports.add = async (user, eventName) => {
     } else {
       return user.username + ' is already in this race!';
     }
-  } else if (event && !event.open) {
-    return 'that event is not open yet!';
   } else {
     return 'event not found!';
   }
@@ -117,7 +115,7 @@ exports.add = async (user, eventName) => {
 
 exports.remove = async (user, eventName) => {
   var event = await getEvent(eventName);
-  if (event && event.open) {
+  if (event) {
     var participants = event.participants || {};
 
     if (participants[user.id]) {
@@ -131,8 +129,6 @@ exports.remove = async (user, eventName) => {
     } else {
       return user.username + ' is not in this race!';
     }
-  } else if (event && !event.open) {
-    return 'that event is not open yet!';
   } else {
     return 'event not found!';
   }
