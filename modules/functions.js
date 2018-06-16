@@ -67,7 +67,7 @@ module.exports = (bot) => {
         }
       }
       setTimeout(function () {
-        this.checkForEvent(bot).then(() => {});
+        checkForEvent(bot).then(() => {});
       }, 30000);
     }
     await checkForEvent(bot);
