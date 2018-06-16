@@ -63,11 +63,11 @@ module.exports = (bot) => {
           }, {
               where: { id: events[i].id }
             });
-          setTimeout(bot.startEvent(bot, events[i]), timeAway);
+          setTimeout(() => { bot.startEvent(bot, events[i]) }, timeAway);
         }
       }
       setTimeout(function () {
-        checkForEvent(bot).then(() => {});
+        checkForEvent(bot).then(() => { });
       }, 30000);
     }
     await checkForEvent(bot);
