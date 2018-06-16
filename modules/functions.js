@@ -66,11 +66,11 @@ module.exports = (bot) => {
           setTimeout(bot.startEvent(bot, events[i]), timeAway);
         }
       }
+      setTimeout(function () {
+        this.checkForEvent(bot).then(() => {});
+      }, 30000);
     }
     await checkForEvent(bot);
-    setInterval(function () {
-      await this.checkForEvent(bot);
-    }, 30000);
 
     function sendReminder(event, date) {
       bot.channels.get(bot.config.raceChannel).send(`<@&380910598742999050>: **${event}** is starting **${moment(new Date(date).toISOString()).fromNow()}!**`);
