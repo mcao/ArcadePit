@@ -4,11 +4,12 @@ module.exports = (bot) => {
   bot.startEvent = async (bot, e) => {
     var event = await bot.database.Events.findOne({ where: { id: e.id } }),
       allReady = true;
-    event.participants.forEach(participant => {
-      if (!participant.ready) {
+
+    for (var id in event.participants) {
+      if (!event.participants[id].ready) {
         allReady = false;
       }
-    });
+    }
 
     if (allReady) {
       bot.logger.log('All participants are ready. Starting event...');
