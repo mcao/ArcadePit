@@ -69,7 +69,7 @@ module.exports = (bot) => {
     }
     await checkForEvent(bot);
     setInterval(function () {
-      await checkForEvent(bot);
+      await this.checkForEvent(bot);
     }, 30000);
 
     function sendReminder(event, date) {
