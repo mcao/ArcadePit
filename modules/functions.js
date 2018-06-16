@@ -43,7 +43,7 @@ module.exports = (bot) => {
             where: { id: events[i].id }
           });
         } if (timeAway < 1800000 && !events[i].open) {
-          bot.channels.get(bot.config.raceChannel).send(`<@&380910598742999050>: You may now set yourself as ready for **${events[i]}**!`);
+          bot.channels.get(bot.config.raceChannel).send(`<@&380910598742999050>: You may now set yourself as ready for **${events[i].name}**!`);
           await bot.database.Events.update({
             open: true
           }, {
