@@ -134,6 +134,29 @@ exports.remove = async (user, eventName) => {
   }
 };
 
+exports.removeAll = async (user) => {
+  var events = await Events.findAll({
+    where: {
+      started: false,
+      ended: false,
+    }
+  });
+
+  for (var i = 0; i < events.length; i++) {
+    var participants = events[i].participants || {};
+
+    if (participants[user.id]) {
+      delete participants[user.id];
+      await Events.update({
+        participants: participants
+      }, {
+        where: { id: events[i].id }
+      })
+    }
+  }
+  return 'successfully removed ' + user.username + ' from all races!';
+};
+
 exports.cancel = async (eventName) => {
   var event = await getEvent(eventName);
 
