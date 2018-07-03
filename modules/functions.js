@@ -74,7 +74,7 @@ module.exports = (bot) => {
           }, {
             where: { id: events[i].id }
           });
-          setTimeout(() => { 
+          setTimeout(async function() { 
             bot.startEvent(bot, events[i]);
             await bot.database.Events.update({
               started: true
