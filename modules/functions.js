@@ -13,7 +13,16 @@ module.exports = (bot) => {
 
     if (allReady) {
       bot.logger.log('All participants are ready. Starting event...');
-      // Extend functionality
+      bot.openEvent = null;
+      bot.event = e;
+      bot.eventInProgress = true;
+    } else {
+      for (var id in event.participants) {
+        if (!event.participants[id].ready) {
+          bot.channels.get(bot.config.raceChannel).send(`<@${id}> is not ready yet!`);
+        }
+      }
+      bot.channels.get(bot.config.raceChannel).send("Not everybody is ready yet! Aborting start...");
     }
   };
 
@@ -48,8 +57,9 @@ module.exports = (bot) => {
           await bot.database.Events.update({
             open: true
           }, {
-              where: { id: events[i].id }
-            });
+            where: { id: events[i].id }
+          });
+          bot.openEvent = events[i];
         } if (timeAway < 600000 && events[i].lastReminderSent < 3) {
           sendReminder(events[i].name, date);
           await bot.database.Events.update({
@@ -62,9 +72,16 @@ module.exports = (bot) => {
           await bot.database.Events.update({
             lastReminderSent: 4
           }, {
+            where: { id: events[i].id }
+          });
+          setTimeout(() => { 
+            bot.startEvent(bot, events[i]);
+            await bot.database.Events.update({
+              started: true
+            }, {
               where: { id: events[i].id }
             });
-          setTimeout(() => { bot.startEvent(bot, events[i]) }, timeAway);
+          }, timeAway);
         }
       }
       setTimeout(function () {

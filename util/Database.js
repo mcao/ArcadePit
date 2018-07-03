@@ -97,7 +97,8 @@ exports.add = async (user, eventName) => {
         ready: false,
         started: false,
         finished: false,
-        time: 0
+        time: 0,
+        score: 0
       };
       await Events.update({
         participants: participants
