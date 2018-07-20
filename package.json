@@ -17,6 +17,6 @@
     "moment-duration-format": "^2.2.0",
     "pg": "^7.4.1",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^4.33.4"
+    "sequelize": "^4.38.0"
   }
 }
