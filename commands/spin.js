@@ -1,7 +1,9 @@
 exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unused-vars
   var gamelist = require('../games.json');
-  if (gamelist.length < 3) {
+  if (gamelist.length < 3 && gamelist.length > 0) {
     msg.channel.send(gamelist.join(', '));
+  } else if (gamelist == 0) {
+    msg.channel.send('There are no games in the list!');
   } else {
     msg.channel.send(getRandom(gamelist, 3).join(', '));
   }
