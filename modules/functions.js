@@ -14,7 +14,7 @@ module.exports = (bot) => {
     if (allReady) {
       bot.logger.log('All participants are ready. Starting event...');
       bot.openEvent = null;
-      bot.event = e;
+      bot.event = event;
       bot.eventInProgress = true;
     } else {
       for (var id in event.participants) {
