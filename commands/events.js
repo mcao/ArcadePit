@@ -3,7 +3,7 @@ const {
 } = require('discord.js');
 
 exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unused-vars
-  if (msg.args[0] == 'all') {
+  if (args[0] == 'all') {
     bot.database.Events.findAll().then(events => {
       var embed = new MessageEmbed()
         .setAuthor('All Racing Events', bot.user.displayAvatarURL())
