@@ -24,7 +24,7 @@ module.exports = (bot) => {
         bot.event.participants[i].started = true;
       }
       channel = bot.channels.get(bot.config.raceChannel);
-      channel.send(bot.event.name + ' is starting in 4 seconds!');
+      channel.send('<@&380910598742999050>: ' + bot.event.name + ' is starting in 4 seconds!');
       setTimeout(() => {
         channel.send('3!');
       }, 1000);
