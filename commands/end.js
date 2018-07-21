@@ -16,7 +16,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
       where: { id: bot.event.id }
     });
     return msg.channel.send('The ' + bot.event.name + ' event has ended!');
-    bot.sendStandings(bot.event.id)
+    // bot.sendStandings(bot.event.id)
     bot.event = null;
   }
 };

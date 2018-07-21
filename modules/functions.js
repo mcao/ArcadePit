@@ -2,7 +2,11 @@ module.exports = (bot) => {
   const moment = require('moment');
 
   bot.startEvent = async (bot, e) => {
-    var event = await bot.database.Events.findOne({ where: { id: e.id } }),
+    var event = await bot.database.Events.findOne({
+        where: {
+          id: e.id
+        }
+      }),
       allReady = true;
 
     for (var id in event.participants) {
@@ -19,6 +23,28 @@ module.exports = (bot) => {
       for (var id in bot.event.participants) {
         bot.event.participants[i].started = true;
       }
+      channel = bot.channels.find(bot.config.raceChannel);
+      channel.send(bot.event.name + ' is starting in 4 seconds!');
+      setTimeout(() => {
+        channel.send('3!');
+      }, 1000);
+      setTimeout(() => {
+        channel.send('2!');
+      }, 2000);
+      setTimeout(() => {
+        channel.send('1!');
+      }, 3000);
+      setTimeout(() => {
+        channel.send('**GO!**');
+        bot.startedAt = new Date();
+      }, 4000);
+      await bot.database.Events.update({
+        started: true
+      }, {
+        where: {
+          id: bot.event.id
+        }
+      });
     } else {
       for (var id in event.participants) {
         if (!event.participants[id].ready) {
@@ -36,7 +62,11 @@ module.exports = (bot) => {
   bot.startWatchdog = async (bot) => {
     bot.logger.log('Watchdog Started.');
     async function checkForEvent(bot) {
-      var events = await bot.database.Events.findAll({ where: { started: false } });
+      var events = await bot.database.Events.findAll({
+        where: {
+          started: false
+        }
+      });
       for (var i = 0; i < events.length; i++) {
         var date = new Date(events[i].time),
           timeAway = date - new Date();
@@ -46,49 +76,65 @@ module.exports = (bot) => {
           await bot.database.Events.update({
             lastReminderSent: 1
           }, {
-              where: { id: events[i].id }
-            });
-        } if (timeAway < 3600000 && events[i].lastReminderSent < 2) {
+            where: {
+              id: events[i].id
+            }
+          });
+        }
+        if (timeAway < 3600000 && events[i].lastReminderSent < 2) {
           sendReminder(events[i].name, date);
           await bot.database.Events.update({
             lastReminderSent: 2
           }, {
-              where: { id: events[i].id }
-            });
-        } if (timeAway < 1800000 && !events[i].open) {
+            where: {
+              id: events[i].id
+            }
+          });
+        }
+        if (timeAway < 1800000 && !events[i].open) {
           bot.channels.get(bot.config.raceChannel).send(`<@&380910598742999050>: You may now set yourself as ready for **${events[i].name}**!`);
           await bot.database.Events.update({
             open: true
           }, {
-            where: { id: events[i].id }
+            where: {
+              id: events[i].id
+            }
           });
           bot.openEvent = events[i];
-        } if (timeAway < 600000 && events[i].lastReminderSent < 3) {
+        }
+        if (timeAway < 600000 && events[i].lastReminderSent < 3) {
           sendReminder(events[i].name, date);
           await bot.database.Events.update({
             lastReminderSent: 3
           }, {
-              where: { id: events[i].id }
-            });
-        } if (timeAway < 300000 && events[i].lastReminderSent < 4) {
+            where: {
+              id: events[i].id
+            }
+          });
+        }
+        if (timeAway < 300000 && events[i].lastReminderSent < 4) {
           sendReminder(events[i].name, date);
           await bot.database.Events.update({
             lastReminderSent: 4
           }, {
-            where: { id: events[i].id }
+            where: {
+              id: events[i].id
+            }
           });
-          setTimeout(async function() { 
+          setTimeout(async function () {
             bot.startEvent(bot, events[i]);
             await bot.database.Events.update({
               started: true
             }, {
-              where: { id: events[i].id }
+              where: {
+                id: events[i].id
+              }
             });
           }, timeAway);
         }
       }
       setTimeout(function () {
-        checkForEvent(bot).then(() => { });
+        checkForEvent(bot).then(() => {});
       }, 30000);
     }
     await checkForEvent(bot);
@@ -137,7 +183,11 @@ module.exports = (bot) => {
     const filter = m => m.author.id === msg.author.id;
     await msg.channel.send(question);
     try {
-      const collected = await msg.channel.awaitMessages(filter, { max: 1, time: limit, errors: ['time'] });
+      const collected = await msg.channel.awaitMessages(filter, {
+        max: 1,
+        time: limit,
+        errors: ['time']
+      });
       return collected.first().content;
     } catch (e) {
       return false;
@@ -182,7 +232,9 @@ module.exports = (bot) => {
   // <String>.toPropercase() returns a proper-cased string such as: 
   // "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"
   String.prototype.toProperCase = function () {
-    return this.replace(/([^\W_]+[^\s-]*) */g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+    return this.replace(/([^\W_]+[^\s-]*) */g, function (txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
   };
 
   // <Array>.random() returns a single random element from an array
