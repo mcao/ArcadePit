@@ -23,7 +23,7 @@ module.exports = (bot) => {
       for (var id in bot.event.participants) {
         bot.event.participants[i].started = true;
       }
-      channel = bot.channels.find(bot.config.raceChannel);
+      channel = bot.channels.get(bot.config.raceChannel);
       channel.send(bot.event.name + ' is starting in 4 seconds!');
       setTimeout(() => {
         channel.send('3!');
@@ -42,7 +42,7 @@ module.exports = (bot) => {
         started: true
       }, {
         where: {
-          id: bot.event.id
+          id: event.id
         }
       });
     } else {
