@@ -13,7 +13,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
         .setColor(msg.guild.me.displayHexColor);
 
       for (var i = 0; i < events.length; i++) {
-        embed.addField(`${events[i].externalID}: ${events[i].name} - ${events[i].timed ? 'Timed' : 'Scored'} (${Object.keys(events[i].participants).length || 'No'} Participants)`, events[i].time);
+        embed.addField(`${events[i].externalID}: ${events[i].name} - ${events[i].timed ? 'Timed' : 'Scored'} (${Object.keys(events[i].participants).length || 'No'} Participants) [${events[i].ended ? 'ENDED' : 'NOT STARTED'}]`, events[i].time);
       }
 
       msg.channel.send({
