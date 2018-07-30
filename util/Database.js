@@ -10,38 +10,91 @@ const sequelize = new Sequelize('tie', 'tie', 'burger1', { // eslint-disable-lin
 });
 
 const Events = sequelize.define('events', {
-  id: { type: Sequelize.INTEGER, autoIncrement: true, unique: true, primaryKey: true },
-  name: { type: Sequelize.STRING, allowNull: false, unique: true },
-  creator: { type: Sequelize.STRING, allowNull: false },
-  time: { type: Sequelize.DATE, allowNull: false, unique: true },
-  timed: { type: Sequelize.BOOLEAN },
-  participants: { type: Sequelize.JSON },
-  standings: { type: Sequelize.ARRAY({ type: Sequelize.STRING }) },
-  timeStarted: { type: Sequelize.DATE },
-  timeEnded: { type: Sequelize.DATE },
-  started: { type: Sequelize.BOOLEAN },
-  ended: { type: Sequelize.BOOLEAN },
-  lastReminderSent: { type: Sequelize.INTEGER },
-  open: { type: Sequelize.BOOLEAN },
-  forciblyEnded: { type: Sequelize.BOOLEAN },
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    unique: true,
+    primaryKey: true
+  },
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true
+  },
+  creator: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  time: {
+    type: Sequelize.DATE,
+    allowNull: false,
+    unique: true
+  },
+  timed: {
+    type: Sequelize.BOOLEAN
+  },
+  participants: {
+    type: Sequelize.JSON
+  },
+  standings: {
+    type: Sequelize.ARRAY({
+      type: Sequelize.STRING
+    })
+  },
+  timeStarted: {
+    type: Sequelize.DATE
+  },
+  timeEnded: {
+    type: Sequelize.DATE
+  },
+  started: {
+    type: Sequelize.BOOLEAN
+  },
+  ended: {
+    type: Sequelize.BOOLEAN
+  },
+  lastReminderSent: {
+    type: Sequelize.INTEGER
+  },
+  open: {
+    type: Sequelize.BOOLEAN
+  },
+  forciblyEnded: {
+    type: Sequelize.BOOLEAN
+  },
 }, {
-    getterMethods: {
-      externalID: function () { return this.id % 100; }
+  getterMethods: {
+    externalID: function () {
+      return this.id % 100;
     }
-  });
+  }
+});
 
 exports.Events = Events;
 
 async function getEvent(nameOrID) {
   if (!isNaN(nameOrID)) {
-    var events = await Events.findAll({ where: { ended: false } });
+    var events = await Events.findAll({
+      where: {
+        ended: false
+      }
+    });
     for (var i = 0; i < events.length; i++) {
       if (events[i].externalID === Number(nameOrID)) {
-        return await Events.findOne({ where: { id: events[i].id } });
+        return await Events.findOne({
+          where: {
+            id: events[i].id
+          }
+        });
       }
     }
   } else {
-    return await Events.findOne({ where: { name: nameOrID, ended: false } });
+    return await Events.findOne({
+      where: {
+        name: nameOrID,
+        ended: false
+      }
+    });
   }
 }
 
@@ -103,8 +156,10 @@ exports.add = async (user, eventName) => {
       await Events.update({
         participants: participants
       }, {
-          where: { id: event.id }
-        });
+        where: {
+          id: event.id
+        }
+      });
       return 'successfully added ' + user.username + ' to the ' + event.name + ' race!';
     } else {
       return user.username + ' is already in this race!';
@@ -124,8 +179,10 @@ exports.remove = async (user, eventName) => {
       await Events.update({
         participants: participants
       }, {
-          where: { id: event.id }
-        });
+        where: {
+          id: event.id
+        }
+      });
       return 'successfully removed ' + user.username + ' from the ' + event.name + ' race!';
     } else {
       return user.username + ' is not in this race!';
@@ -151,7 +208,9 @@ exports.removeAll = async (user) => {
       await Events.update({
         participants: participants
       }, {
-        where: { id: events[i].id }
+        where: {
+          id: events[i].id
+        }
       })
     }
   }
@@ -168,8 +227,10 @@ exports.cancel = async (eventName) => {
       open: false,
       forciblyEnded: true,
     }, {
-        where: { id: event.id }
-      });
+      where: {
+        id: event.id
+      }
+    });
     return `successfully cancelled the **${event.name}** race!`;
   } else if (event && event.started) {
     return 'that event has already begun!';
