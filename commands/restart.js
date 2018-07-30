@@ -16,7 +16,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
     participants: bot.event.participants
   }, {
     where: {
-      id: event.id
+      id: bot.event.id
     }
   });
   bot.openEvent = bot.event;
