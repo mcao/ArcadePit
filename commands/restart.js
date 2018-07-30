@@ -1,4 +1,5 @@
 exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unused-vars
+  if (!bot.event) return;
   bot.logger.log('Stopping and resetting event...');
   for (var id in bot.event.participants) {
     bot.event.participants[i] = {
@@ -21,6 +22,8 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
   bot.openEvent = bot.event;
   bot.eventInProgress = false;
   bot.event = null;
+  channel = bot.channels.get(bot.config.raceChannel);
+  channel.send('Stopping and resetting event... Please re-mark yourselves as ready and restart the race!');
 };
 
 exports.conf = {
