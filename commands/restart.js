@@ -1,8 +1,5 @@
 exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unused-vars
   bot.logger.log('Stopping and resetting event...');
-  bot.openEvent = null;
-  bot.event = event;
-  bot.eventInProgress = true;
   for (var id in bot.event.participants) {
     bot.event.participants[i] = {
       ready: false,
