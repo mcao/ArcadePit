@@ -2,23 +2,19 @@ module.exports = (bot) => {
   const moment = require('moment');
 
   bot.startEvent = async (bot, e) => {
-    var event = await bot.database.Events.findOne({
-        where: {
-          id: e.id
-        }
-      }),
-      allReady = true;
+    if (!bot.openEvent) return;
+    var allReady = true;
 
-    for (var id in event.participants) {
-      if (!event.participants[id].ready) {
+    for (var id in bot.openEvent.participants) {
+      if (!bot.openEvent.participants[id].ready) {
         allReady = false;
       }
     }
 
     if (allReady) {
       bot.logger.log('All participants are ready. Starting event...');
+      bot.event = bot.openEvent;
       bot.openEvent = null;
-      bot.event = event;
       bot.eventInProgress = true;
       for (var id in bot.event.participants) {
         bot.event.participants[i].started = true;
@@ -111,6 +107,7 @@ module.exports = (bot) => {
               id: events[i].id
             }
           });
+          bot.openEvent.lastReminderSent = 3
         }
         if (timeAway < 300000 && events[i].lastReminderSent < 4) {
           sendReminder(events[i].name, date);
