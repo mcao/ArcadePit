@@ -118,15 +118,9 @@ module.exports = (bot) => {
               id: events[i].id
             }
           });
+          bot.openEvent.lastReminderSent = 4
           setTimeout(async function () {
             bot.startEvent(bot, events[i]);
-            await bot.database.Events.update({
-              started: true
-            }, {
-              where: {
-                id: events[i].id
-              }
-            });
           }, timeAway);
         }
       }
