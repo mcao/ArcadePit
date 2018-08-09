@@ -17,7 +17,7 @@ module.exports = (bot) => {
       bot.openEvent = null;
       bot.eventInProgress = true;
       for (var id in bot.event.participants) {
-        bot.event.participants[i].started = true;
+        bot.event.participants[id].started = true;
       }
       channel = bot.channels.get(bot.config.raceChannel);
       channel.send('<@&380910598742999050>: ' + bot.event.name + ' is starting in 4 seconds!');
