@@ -15,7 +15,7 @@ exports.conf = {
 
 exports.help = {
   name: 'addgame',
-  category: 'Racing',
+  category: 'Tech',
   description: 'Adds a game to the list to choose from.',
   usage: 'addgame <game-name>'
 };
