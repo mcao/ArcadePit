@@ -34,16 +34,15 @@ module.exports = (bot) => {
         channel.send('**GO!**');
         bot.startedAt = new Date();
       }, 4000);
-      await bot.database.Events.update({
-        started: true
-      }, {
+      bot.event.started = true;
+      await bot.database.Events.update(bot.event, {
         where: {
-          id: event.id
+          id: bot.event.id
         }
       });
     } else {
-      for (var id in event.participants) {
-        if (!event.participants[id].ready) {
+      for (var id in bot.openEvent.participants) {
+        if (!bot.openEvent.participants[id].ready) {
           bot.channels.get(bot.config.raceChannel).send(`<@${id}> is not ready yet!`);
         }
       }
