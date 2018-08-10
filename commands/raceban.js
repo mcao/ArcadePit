@@ -2,7 +2,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
   if (!msg.mentions.users.first()) return msg.reply('please mention someone to blacklist!');
   let id = msg.mentions.users.first().id,
     i = 0,
-    blacklist = require('./banned.json');
+    blacklist = require('../banned.json');
   while (i < blacklist.length && !found) {
     if (blacklist[i] === id) {
       found = true;
@@ -12,7 +12,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
   }
   if (!found) {
     blacklist.push(id);
-    fs.writeFileSync('./banned.json', JSON.stringify(blacklist, null, 3));
+    fs.writeFileSync('../banned.json', JSON.stringify(blacklist, null, 3));
     msg.channel.send('User ' + msg.content + ' has been blacklisted!');
   }
 };
