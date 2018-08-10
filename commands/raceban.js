@@ -14,7 +14,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
   if (!found) {
     blacklist.push(id);
     require('fs').writeFileSync('../banned.json', JSON.stringify(blacklist, null, 3));
-    msg.channel.send('User ' + msg.content + ' has been blacklisted!');
+    msg.channel.send('User ' + msg.mentions.user.first() + ' has been blacklisted!');
   }
 };
 

@@ -2,7 +2,7 @@
 exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unused-vars
   if (!msg.guild.me.hasPermission('MANAGE_ROLES_OR_PERMISSIONS')) {
     return msg.channel.send(':x: I can\'t assign or deassign roles in this server!');
-  } else if (require('./banned.json').indexOf(msg.author.id) > -1) {
+  } else if (require('../banned.json').indexOf(msg.author.id) > -1) {
     return;
   }
 
