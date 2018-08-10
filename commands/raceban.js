@@ -2,7 +2,8 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
   if (!msg.mentions.users.first()) return msg.reply('please mention someone to blacklist!');
   let id = msg.mentions.users.first().id,
     i = 0,
-    blacklist = require('../banned.json');
+    blacklist = require('../banned.json'),
+    found = false;
   while (i < blacklist.length && !found) {
     if (blacklist[i] === id) {
       found = true;
