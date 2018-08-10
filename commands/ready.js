@@ -8,11 +8,14 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
   msg.reply('you have been marked down as ready for **' + bot.openEvent.name + '**!');
   var i = 0;
   for (user in bot.openEvent.participants) {
-    if (!user.ready) {
+    if (!bot.openEvent.participants[user].ready) {
       i++;
     }
   }
   msg.channel.send(i + ' more people need to mark themselves as ready!');
+  if (i == 0) {
+    msg.channel.send('The race is now ready to begin!')
+  }
 };
 
 exports.conf = {
