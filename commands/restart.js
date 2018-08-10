@@ -2,7 +2,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
   if (!bot.event) return;
   bot.logger.log('Stopping and resetting event...');
   for (var id in bot.event.participants) {
-    bot.event.participants[i] = {
+    bot.event.participants[id] = {
       ready: false,
       started: false,
       finished: false,
