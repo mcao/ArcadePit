@@ -10,6 +10,11 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
       name: eventName,
     }
   }).then(event => {
+    if (bot.openEvent && event.name == bot.openEvent.name)
+      event = bot.openEvent
+    else if (bot.event && event.name == bot.event.name)
+      event = bot.event
+    
     var embed = new MessageEmbed()
       .setAuthor('Players in ' + event.name, bot.user.displayAvatarURL())
       .setFooter(msg.guild.name, msg.guild.iconURL())
