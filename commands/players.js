@@ -27,8 +27,10 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
         }
       }
 
-      embed.addField('Ready', ready)
-        .addField('Not Ready', notReady);
+      if (ready != '')
+        embed.addField('Ready', ready);
+      if (notReady != '')
+        embed.addField('Not Ready', notReady);
 
     msg.channel.send({
       embed: embed
