@@ -19,7 +19,6 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
 
 exports.conf = {
   enabled: true,
-  guildOnly: false,
   aliases: [],
   permLevel: 'Moderator'
 };
@@ -28,5 +27,5 @@ exports.help = {
   name: 'raceunban',
   category: 'Racing',
   description: 'Unbans a user from participating in races.',
-  usage: 'raceban'
+  usage: 'raceban <user-mention>'
 };

@@ -25,7 +25,6 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
 
 exports.conf = {
   enabled: true,
-  guildOnly: true,
   aliases: [],
   permLevel: 'User'
 };
