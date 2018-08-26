@@ -140,6 +140,10 @@ exports.create = (data) => {
   });
 };
 
+exports.find = async (eventName) => {
+  return getEvent(eventName);
+}
+
 exports.add = async (user, eventName) => {
   var event = await getEvent(eventName);
   if (event) {
