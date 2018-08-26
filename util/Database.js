@@ -140,7 +140,7 @@ exports.create = (data) => {
   });
 };
 
-exports.find = async (eventName) => {
+exports.getEvent = async (eventName) => {
   return getEvent(eventName);
 }
 
