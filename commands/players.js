@@ -21,9 +21,9 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
 
   for (var key in event.participants) {
     if (event.participants[key].ready) {
-      ready += '<@' + key + '> (' + bot.users.get(key).username + ')'
+      ready += '<@' + key + '> (' + bot.users.get(key).username + ')\n'
     } else {
-      notReady += '<@' + key + '> (' + bot.users.get(key).username + ')'
+      notReady += '<@' + key + '> (' + bot.users.get(key).username + ')\n'
     }
   }
 
