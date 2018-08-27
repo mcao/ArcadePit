@@ -4,9 +4,9 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
   if (bot.openEvent) return msg.channel.send(`**${bot.openEvent.name}** will be starting in ${hms(new Date(bot.openEvent.time) - new Date())}`)
 
   function hms(seconds) {
-    return new Date(null)
-      .setSeconds(seconds)
-      .toISOString().substr(11, 8);
+    var d = new Date(null);
+    d.setSeconds(seconds);
+    return d.toISOString().substr(11, 8);
   }
 };
 
