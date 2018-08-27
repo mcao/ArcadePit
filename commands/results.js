@@ -11,7 +11,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
     event = bot.event
 
   var embed = new MessageEmbed()
-    .setTitle(`Results for ${event.name}`)
+    .setTitle(`Results for ${event.name}`, bot.user.displayAvatarURL())
     .setFooter(msg.guild.name, msg.guild.iconURL())
     .setTimestamp()
     .setColor(msg.guild.me.displayHexColor);
