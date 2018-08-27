@@ -5,8 +5,8 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
 
   function hms(seconds) {
     return new Date(null)
-      .addSeconds(seconds)
-      .toString('mm:ss');
+      .setSeconds(seconds)
+      .toISOString().substr(11, 8);
   }
 };
 
