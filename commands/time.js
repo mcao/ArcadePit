@@ -1,12 +1,12 @@
 exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unused-vars
   if (!bot.event && !bot.openEvent) return msg.channel.send('There is no event running or open right now!');
   if (bot.event) return msg.channel.send(`**${bot.event.name}** has been running for ${hms((new Date() - bot.startedAt) / 1000)}`)
-  if (bot.openEvent) return msg.channel.send(`**${bot.openEvent.name}** will be starting in ${hms(new Date(bot.openEvent.time) - new Date())}`)
+  if (bot.openEvent) return msg.channel.send(`**${bot.openEvent.name}** will be starting in ${hms(new Date(bot.openEvent.time) - new Date() / 1000)}`)
 
   function hms(seconds) {
     var d = new Date(null);
     d.setSeconds(seconds);
-    return d.toISOString().substr(11, 8);
+    return d.toISOString().substr(14, 5);
   }
 };
 
