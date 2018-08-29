@@ -4,7 +4,6 @@
  * @description Useful database functions
  */
 
-const RaceError = require('./RaceError');
 const config = require('../config');
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize(config.database.name, config.database.user, config.database.pass, { // eslint-disable-line no-unused-vars
@@ -167,10 +166,10 @@ exports.add = async (user, eventName) => {
         }
       });
     } else {
-      throw new RaceError('This racer is already in the race!')
+      throw new Error('This racer is already in the race!')
     }
   } else {
-    throw new RaceError('This race does not exist!');
+    throw new Error('This race does not exist!');
   }
 };
 
