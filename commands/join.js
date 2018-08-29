@@ -5,7 +5,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
     await bot.database.add(msg.author, args.join(' '));
     msg.reply('you have been added to **' + args.join(' ') + '**!');
   } catch (err) {
-    msg.channel.send(err);
+    msg.channel.send(err.message);
   }
 };
 
