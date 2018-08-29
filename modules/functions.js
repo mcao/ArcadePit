@@ -1,5 +1,7 @@
 module.exports = (bot) => {
   const moment = require('moment');
+  const MINUTE = 60000;
+  const channel = bot.channels.get(bot.config.raceChannel);
 
   bot.startEvent = async (bot, e) => {
     if (!bot.openEvent) return;
@@ -13,45 +15,52 @@ module.exports = (bot) => {
 
     if (allReady) {
       bot.logger.log('All participants are ready. Starting event...');
-      bot.event = bot.openEvent;
-      bot.openEvent = null;
+      bot.event = bot.openEvent, bot.openEvent = null;
       bot.eventInProgress = true;
       for (var id in bot.event.participants) {
         bot.event.participants[id].started = true;
       }
-      channel = bot.channels.get(bot.config.raceChannel);
+      
       channel.send('<@&' + bot.config.raceRole + '>: ' + bot.event.name + ' is starting in 4 seconds!');
-      setTimeout(() => {
-        channel.send('3!');
-      }, 1000);
-      setTimeout(() => {
-        channel.send('2!');
-      }, 2000);
-      setTimeout(() => {
-        channel.send('1!');
-      }, 3000);
+      setTimeout(channel.send('3!'), 1000);
+      setTimeout(channel.send('2!'), 2000);
+      setTimeout(channel.send('1!'), 3000);
       setTimeout(() => {
         channel.send('**GO!**');
         bot.startedAt = new Date();
+        bot.event.started = true;
+        await bot.database.sync(bot.event);
       }, 4000);
-      bot.event.started = true;
-      await bot.database.Events.update(bot.event, {
-        where: {
-          id: bot.event.id
-        }
-      });
     } else {
       for (var id in bot.openEvent.participants) {
-        if (!bot.openEvent.participants[id].ready) {
-          bot.channels.get(bot.config.raceChannel).send(`<@${id}> is not ready yet!`);
-        }
+        var notReady = "Not Ready:\n";
+        if (!bot.openEvent.participants[id].ready)
+          notReady += `<@${id}>`;
       }
-      bot.channels.get(bot.config.raceChannel).send("Not everybody is ready yet! Aborting start...");
+      channel.send(notReady);
+      channel.send("Not everybody is ready yet! Aborting start...");
     }
   };
 
-  bot.endEvent = async (bot) => {
+  bot.endEvent = async () => {
     if (!bot.event) return;
+
+    var players = bot.event.participants;
+    for (var id in players) {
+      if (bot.event.timed) {
+        if (!players[id].finished)
+          players[id].time = -1;
+      } else {
+        if (!players[id].finished)
+          players[id].score = -1;
+      }
+    }
+    bot.event.participants = players;
+    bot.eventInProgress = false;
+    bot.startedAt = null;
+    await bot.database.sync(bot.event);
+    bot.event = null;
+    //TODO: Implement standings sending
   };
 
   /*
@@ -60,68 +69,24 @@ module.exports = (bot) => {
   */
   bot.startWatchdog = async (bot) => {
     bot.logger.log('Watchdog Started.');
+
     async function checkForEvent(bot) {
-      var events = await bot.database.Events.findAll({
-        where: {
-          started: false
-        }
-      });
+      var events = await bot.database.getFutureEvents();
+
       for (var i = 0; i < events.length; i++) {
         var date = new Date(events[i].time),
           timeAway = date - new Date();
 
-        if (timeAway < 86400000 && events[i].lastReminderSent < 1) {
-          sendReminder(events[i].name, date);
-          await bot.database.Events.update({
-            lastReminderSent: 1
-          }, {
-            where: {
-              id: events[i].id
-            }
-          });
-        }
-        if (timeAway < 3600000 && events[i].lastReminderSent < 2) {
-          sendReminder(events[i].name, date);
-          await bot.database.Events.update({
-            lastReminderSent: 2
-          }, {
-            where: {
-              id: events[i].id
-            }
-          });
-        }
-        if (timeAway < 1800000 && !events[i].open) {
-          bot.channels.get(bot.config.raceChannel).send(`<@&${bot.config.raceRole}>: You may now set yourself as ready for **${events[i].name}**!`);
-          await bot.database.Events.update({
-            open: true
-          }, {
-            where: {
-              id: events[i].id
-            }
-          });
-          bot.openEvent = events[i];
-        }
-        if (timeAway < 600000 && events[i].lastReminderSent < 3) {
-          sendReminder(events[i].name, date);
-          await bot.database.Events.update({
-            lastReminderSent: 3
-          }, {
-            where: {
-              id: events[i].id
-            }
-          });
-          bot.openEvent.lastReminderSent = 3
-        }
-        if (timeAway < 300000 && events[i].lastReminderSent < 4) {
-          sendReminder(events[i].name, date);
-          await bot.database.Events.update({
-            lastReminderSent: 4
-          }, {
-            where: {
-              id: events[i].id
-            }
-          });
-          bot.openEvent.lastReminderSent = 4
+        if (timeAway < MINUTE * 1440 && events[i].lastReminderSent < 1)
+          sendReminder(events[i].name, date, 1);
+        if (timeAway < MINUTE * 60 && events[i].lastReminderSent < 2)
+          sendReminder(events[i].name, date, 2);
+        if (timeAway < MINUTE * 30 && !events[i].open)
+          openEvent(events[i]);
+        if (timeAway < MINUTE * 10 && events[i].lastReminderSent < 3)
+          sendReminder(events[i].name, date, 3);
+        if (timeAway < MINUTE * 5 && events[i].lastReminderSent < 4) {
+          sendReminder(events[i], date, 4);
           setTimeout(async function () {
             bot.startEvent(bot, events[i]);
           }, timeAway);
@@ -133,8 +98,16 @@ module.exports = (bot) => {
     }
     await checkForEvent(bot);
 
-    function sendReminder(event, date) {
-      bot.channels.get(bot.config.raceChannel).send(`<@&${bot.config.raceRole}>: **${event}** is starting **${moment(new Date(date).toISOString()).fromNow()}!**`);
+    function sendReminder(event, date, lastReminder) {
+      await bot.database.setLastReminder(lastReminder, event.id);
+      bot.openEvent.lastReminderSent = lastReminder;
+      channel.send(`<@&${bot.config.raceRole}>: **${event.name}** is starting **${moment(new Date(date).toISOString()).fromNow()}!**`);
+    }
+
+    function openEvent(event) {
+      channel.send(`<@&${bot.config.raceRole}>: You may now set yourself as ready for **${event.name}**!`);
+      await bot.database.openEvent(event.id);
+      bot.openEvent = event;
     }
   };
 

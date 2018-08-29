@@ -1,23 +1,9 @@
 exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unused-vars
   if (!bot.eventInProgress || !bot.event) return msg.channel.send('No event appears to be in progress!');
   else {
-    var players = bot.event.participants;
-    for (var id in players) {
-      if (bot.event.timed) {
-        if (!players[id].finished)
-          players[id].time = -1;
-      } else {
-        if (!players[id].finished)
-          players[id].score = -1;
-      }
-    }
-    bot.eventInProgress = false;
-    await bot.database.Events.update(bot.event, {
-      where: { id: bot.event.id }
-    });
-    // bot.sendStandings(bot.event.id)
-    bot.event = null;
-    return msg.channel.send('<@&' + bot.config.raceRole + '>: The ' + bot.event.name + ' event has ended!');
+    bot.event.forciblyEnded = true;
+    msg.channel.send('<@&' + bot.config.raceRole + '>: The ' + bot.event.name + ' event has ended!');
+    await bot.endEvent();
   }
 };
 

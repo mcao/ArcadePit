@@ -17,5 +17,5 @@ exports.help = {
   name: 'cancel',
   category: 'Tech',
   description: 'Cancels an event.',
-  usage: 'cancel <eventName>'
+  usage: 'cancel <eventName-or-ID>'
 };

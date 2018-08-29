@@ -1,12 +1,6 @@
 exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unused-vars
-  var eventname = args.join(' ');
-  bot.database.Events.destroy({
-    where: {
-      name: eventname
-    }
-  }).then(() => {
-    msg.reply(`successfully deleted the **${eventname}** race!`);
-  });
+  await bot.database.delete(args.join(' '));
+  msg.reply(`successfully deleted the **${eventname}** race!`);
 };
 
 exports.conf = {
@@ -19,5 +13,5 @@ exports.help = {
   name: 'delete',
   category: 'Tech',
   description: 'Deletes an event from the event list.',
-  usage: 'delete <eventName>'
+  usage: 'delete <eventName-or-ID>'
 };

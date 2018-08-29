@@ -239,3 +239,48 @@ exports.cancel = async (eventName) => {
     throw new Error('Error: This race does not exist!');
   }
 };
+
+exports.delete = async (eventName) => {
+  var event = await getEvent(eventName);
+  await Events.destroy({
+    where: {
+      name: eventName
+    }
+  })
+};
+
+exports.sync = async (event) => {
+  await Events.update(event, {
+    where: {
+      id: event.id
+    }
+  });
+}
+
+exports.getFutureEvents = async () => {
+  return await Events.findAll({
+    where: {
+      started: false
+    }
+  });
+};
+
+exports.setLastReminder = async(lastReminder, eventID) => {
+  await Events.update({
+    lastReminderSent: lastReminder
+  }, {
+    where: {
+      id: eventID
+    }
+  });
+};
+
+exports.openEvent = async(eventID) => {
+  await Events.update({
+    open: true
+  }, {
+    where: {
+      id: eventID
+    }
+  });
+};
