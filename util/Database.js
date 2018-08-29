@@ -4,8 +4,9 @@
  * @description Useful database functions
  */
 
+const config = require('../config');
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('tie', 'tie', 'burger1', { // eslint-disable-line no-unused-vars
+const sequelize = new Sequelize(config.db.name, config.db.user, config.db.pass, { // eslint-disable-line no-unused-vars
   dialect: 'postgres'
 });
 
@@ -98,6 +99,10 @@ async function getEvent(nameOrID) {
   }
 }
 
+exports.getEvent = async (eventName) => {
+  return getEvent(eventName);
+}
+
 exports.initialize = () => {
   sequelize
     .authenticate()
@@ -140,10 +145,6 @@ exports.create = (data) => {
   });
 };
 
-exports.getEvent = async (eventName) => {
-  return getEvent(eventName);
-}
-
 exports.add = async (user, eventName) => {
   var event = await getEvent(eventName);
   if (event) {
@@ -164,12 +165,11 @@ exports.add = async (user, eventName) => {
           id: event.id
         }
       });
-      return 'successfully added ' + user.username + ' to the ' + event.name + ' race!';
     } else {
-      return user.username + ' is already in this race!';
+      throw new RaceError('This racer is already in the race!')
     }
   } else {
-    return 'event not found!';
+    throw new RaceError('This race does not exist!');
   }
 };
 

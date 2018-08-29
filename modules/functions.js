@@ -50,8 +50,12 @@ module.exports = (bot) => {
     }
   };
 
+  bot.endEvent = async (bot) => {
+    if (!bot.event) return;
+  };
+
   /*
-  Function that executes every 30 seconds and checks if reminders 
+    Function that executes every 30 seconds and checks if reminders 
     need to be sent and/or the event needs to be opened or started.
   */
   bot.startWatchdog = async (bot) => {
