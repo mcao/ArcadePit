@@ -4,6 +4,7 @@
  * @description Useful database functions
  */
 
+const RaceError = require('./RaceError');
 const config = require('../config');
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize(config.database.name, config.database.user, config.database.pass, { // eslint-disable-line no-unused-vars
