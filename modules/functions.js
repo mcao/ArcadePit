@@ -20,7 +20,7 @@ module.exports = (bot) => {
         bot.event.participants[id].started = true;
       }
       channel = bot.channels.get(bot.config.raceChannel);
-      channel.send('<@&380910598742999050>: ' + bot.event.name + ' is starting in 4 seconds!');
+      channel.send('<@&' + bot.config.raceRole + '>: ' + bot.event.name + ' is starting in 4 seconds!');
       setTimeout(() => {
         channel.send('3!');
       }, 1000);
@@ -91,7 +91,7 @@ module.exports = (bot) => {
           });
         }
         if (timeAway < 1800000 && !events[i].open) {
-          bot.channels.get(bot.config.raceChannel).send(`<@&380910598742999050>: You may now set yourself as ready for **${events[i].name}**!`);
+          bot.channels.get(bot.config.raceChannel).send(`<@&${bot.config.raceRole}>: You may now set yourself as ready for **${events[i].name}**!`);
           await bot.database.Events.update({
             open: true
           }, {
@@ -134,7 +134,7 @@ module.exports = (bot) => {
     await checkForEvent(bot);
 
     function sendReminder(event, date) {
-      bot.channels.get(bot.config.raceChannel).send(`<@&380910598742999050>: **${event}** is starting **${moment(new Date(date).toISOString()).fromNow()}!**`);
+      bot.channels.get(bot.config.raceChannel).send(`<@&${bot.config.raceRole}>: **${event}** is starting **${moment(new Date(date).toISOString()).fromNow()}!**`);
     }
   };
 

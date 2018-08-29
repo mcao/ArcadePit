@@ -47,5 +47,5 @@ exports.help = {
   name: 'players',
   category: 'Racing',
   description: 'Gives a list of users that are in a certain race.',
-  usage: 'players'
+  usage: 'players <race-name-or-ID>'
 };

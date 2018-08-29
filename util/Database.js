@@ -166,10 +166,10 @@ exports.add = async (user, eventName) => {
         }
       });
     } else {
-      throw new Error('This racer is already in the race!')
+      throw new Error('Error: This racer is already in the race!')
     }
   } else {
-    throw new Error('This race does not exist!');
+    throw new Error('Error: This race does not exist!');
   }
 };
 
@@ -187,12 +187,11 @@ exports.remove = async (user, eventName) => {
           id: event.id
         }
       });
-      return 'successfully removed ' + user.username + ' from the ' + event.name + ' race!';
     } else {
-      return user.username + ' is not in this race!';
+      throw new Error('Error: This racer is not in the race!')
     }
   } else {
-    return 'event not found!';
+    throw new Error('Error: This race does not exist!');
   }
 };
 
@@ -218,7 +217,6 @@ exports.removeAll = async (user) => {
       })
     }
   }
-  return 'successfully removed ' + user.username + ' from all races!';
 };
 
 exports.cancel = async (eventName) => {
@@ -235,10 +233,9 @@ exports.cancel = async (eventName) => {
         id: event.id
       }
     });
-    return `successfully cancelled the **${event.name}** race!`;
   } else if (event && event.started) {
-    return 'that event has already begun!';
+    throw new Error('Error: This race has already began!');
   } else {
-    return 'event not found!';
+    throw new Error('Error: This race does not exist!');
   }
 };

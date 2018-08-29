@@ -1,6 +1,7 @@
 exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unused-vars
-  if (!msg.member.roles.get('380910598742999050')) return msg.reply('to participate in events, you must be a Racer!');
-  msg.reply(await bot.database.removeAll(msg.author));
+  if (!msg.member.roles.get(bot.config.raceRole)) return msg.reply('to participate in events, you must be a Racer!');
+  await bot.database.removeAll(msg.author);
+  msg.reply('successfully removed you from all races!');
 };
 
 exports.conf = {

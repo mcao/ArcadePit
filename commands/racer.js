@@ -6,7 +6,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
     return;
   }
 
-  var role = msg.guild.roles.get('380910598742999050');
+  var role = msg.guild.roles.get(bot.config.raceRole);
 
   if (!role.editable) {
     msg.channel.send(':x: I don\'t have permissions to edit the role `' + role + '`, please check the role order!');

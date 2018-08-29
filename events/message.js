@@ -11,9 +11,7 @@ module.exports = (client, message) => {
 
   if (!cmd) return;
 
-  if (level < client.levelCache[cmd.conf.permLevel]) {
-    return;
-  }
+  if (level < client.levelCache[cmd.conf.permLevel]) return;
 
   message.author.permLevel = level;
 

@@ -1,7 +1,7 @@
 exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unused-vars
   msg.content = msg.content.split(' ').splice(1).join(' ');
-  if (msg.content.indexOf('|') < 0) return msg.channel.send('Please include the name and date of the event, split by a "|"!');
-  if (!msg.content.split('|')[0] | msg.content.split('|')[1] | msg.content.split('|')[2]) return msg.channel.send('You are missing one or more arguments!');
+  if (msg.content.indexOf('|') < 0) return msg.channel.send('Please include the name and date of the event, as well as "timed" or "scored", split by "|"!');
+  if (msg.content.split('|').length < 3) return msg.channel.send('You are missing one or more arguments!');
   
   var eventName = msg.content.split('|')[0].trim();
   var eventTime = new Date(msg.content.split('|')[1].trim());

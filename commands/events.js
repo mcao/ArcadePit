@@ -54,5 +54,5 @@ exports.help = {
   name: 'events',
   category: 'Racing',
   description: 'Returns a list of events.',
-  usage: 'events'
+  usage: 'events (optional "all")'
 };

@@ -1,5 +1,10 @@
 exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unused-vars
-  msg.reply(await bot.database.cancel(args.join(' ')));
+  try {
+    await bot.database.cancel(args.join(' '));
+    msg.reply('**' + args.join(' ') + '** has been successfully cancelled!');
+  } catch (err) {
+    msg.reply(err);
+  }
 };
 
 exports.conf = {

@@ -1,5 +1,5 @@
 exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unused-vars
-  if (!msg.member.roles.get('380910598742999050')) return msg.reply('to participate in event, you must be a Racer!');
+  if (!msg.member.roles.get(bot.config.raceRole)) return msg.reply('to participate in event, you must be a Racer!');
   if (bot.openEvent && bot.openEvent.name.toLowerCase() == args.join(' ').toLowerCase()) return msg.reply('this event is already open!');
   try {
     await bot.database.add(msg.author, args.join(' '));

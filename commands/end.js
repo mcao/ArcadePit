@@ -17,7 +17,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
     });
     // bot.sendStandings(bot.event.id)
     bot.event = null;
-    return msg.channel.send('<@&380910598742999050>: The ' + bot.event.name + ' event has ended!');
+    return msg.channel.send('<@&' + bot.config.raceRole + '>: The ' + bot.event.name + ' event has ended!');
   }
 };
 
@@ -30,6 +30,6 @@ exports.conf = {
 exports.help = {
   name: 'end',
   category: 'Racing',
-  description: 'Ends an event early.',
+  description: 'Ends the currently running event early.',
   usage: 'end'
 };

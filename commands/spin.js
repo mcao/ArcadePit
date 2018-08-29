@@ -33,5 +33,5 @@ exports.help = {
   name: 'spin',
   category: 'Racing',
   description: 'Displays three games from the game list.',
-  usage: 'spin <game-name>'
+  usage: 'spin'
 };
