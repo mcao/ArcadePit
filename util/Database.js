@@ -6,7 +6,7 @@
 
 const config = require('../config');
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize(config.db.name, config.db.user, config.db.pass, { // eslint-disable-line no-unused-vars
+const sequelize = new Sequelize(config.database.name, config.database.user, config.database.pass, { // eslint-disable-line no-unused-vars
   dialect: 'postgres'
 });
 
