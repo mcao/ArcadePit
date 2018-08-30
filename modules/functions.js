@@ -3,6 +3,9 @@ module.exports = (bot) => {
   const MINUTE = 60000;
   const channel = bot.channels.get(bot.config.raceChannel);
 
+  /**
+   * Function that checks if all players are ready and then begins the event.
+   */
   bot.startEvent = async (bot, e) => {
     if (!bot.openEvent) return;
     var allReady = true;
@@ -20,12 +23,12 @@ module.exports = (bot) => {
       for (var id in bot.event.participants) {
         bot.event.participants[id].started = true;
       }
-      
+
       channel.send('<@&' + bot.config.raceRole + '>: ' + bot.event.name + ' is starting in 4 seconds!');
       setTimeout(channel.send('3!'), 1000);
       setTimeout(channel.send('2!'), 2000);
       setTimeout(channel.send('1!'), 3000);
-      setTimeout(() => {
+      setTimeout(async () => {
         channel.send('**GO!**');
         bot.startedAt = new Date();
         bot.event.started = true;
@@ -39,9 +42,14 @@ module.exports = (bot) => {
       }
       channel.send(notReady);
       channel.send("Not everybody is ready yet! Aborting start...");
+      setTimeout(bot.startEvent(), MINUTE * 5);
     }
   };
 
+  /**
+   * Function that forcibly ends the event whether all participants are finished or not.
+   * Can also be called if all participants are finished to end the event.
+   */
   bot.endEvent = async () => {
     if (!bot.event) return;
 
@@ -58,15 +66,17 @@ module.exports = (bot) => {
     bot.event.participants = players;
     bot.eventInProgress = false;
     bot.startedAt = null;
-    await bot.database.sync(bot.event);
-    bot.event = null;
-    //TODO: Implement standings sending
+    bot.sendStandings(bot.event);
+    setTimeout(() => {
+      await bot.database.sync(bot.event);
+      bot.event = null;
+    }, MINUTE * 10);
   };
 
-  /*
-    Function that executes every 30 seconds and checks if reminders 
-    need to be sent and/or the event needs to be opened or started.
-  */
+  /**
+   * Function that executes every 30 seconds and checks if reminders 
+   * need to be sent and/or the event needs to be opened or started.
+   */
   bot.startWatchdog = async (bot) => {
     bot.logger.log('Watchdog Started.');
 
