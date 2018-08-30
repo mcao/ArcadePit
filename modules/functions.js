@@ -1,13 +1,13 @@
 module.exports = (bot) => {
   const moment = require('moment');
   const MINUTE = 60000;
-  const channel = bot.channels.get(bot.config.raceChannel);
 
   /**
    * Function that checks if all players are ready and then begins the event.
    */
   bot.startEvent = async (bot, e) => {
     if (!bot.openEvent) return;
+    const channel = bot.channels.get(bot.config.raceChannel);
     var allReady = true;
 
     for (var id in bot.openEvent.participants) {
@@ -113,11 +113,11 @@ module.exports = (bot) => {
       await bot.database.setLastReminder(lastReminder, event.id);
       event.lastReminderSent = lastReminder;
       await bot.database.sync(event);
-      channel.send(`<@&${bot.config.raceRole}>: **${event.name}** is starting **${moment(new Date(date).toISOString()).fromNow()}!**`);
+      bot.channels.get(bot.config.raceChannel).send(`<@&${bot.config.raceRole}>: **${event.name}** is starting **${moment(new Date(date).toISOString()).fromNow()}!**`);
     }
 
     async function openEvent(event) {
-      channel.send(`<@&${bot.config.raceRole}>: You may now set yourself as ready for **${event.name}**!`);
+      bot.channels.get(bot.config.raceChannel).send(`<@&${bot.config.raceRole}>: You may now set yourself as ready for **${event.name}**!`);
       await bot.database.openEvent(event.id);
       bot.openEvent = event;
     }
