@@ -250,7 +250,7 @@ exports.delete = async (eventName) => {
 };
 
 exports.sync = async (event) => {
-  await Events.update(event, {
+  await Events.update(event.dataValues, {
     where: {
       id: event.id
     }
