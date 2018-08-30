@@ -25,9 +25,9 @@ module.exports = (bot) => {
       }
 
       channel.send('<@&' + bot.config.raceRole + '>: ' + bot.event.name + ' is starting in 4 seconds!');
-      setTimeout(channel.send('3!'), 1000);
-      setTimeout(channel.send('2!'), 2000);
-      setTimeout(channel.send('1!'), 3000);
+      setTimeout(() => {channel.send('3!')}, 1000);
+      setTimeout(() => {channel.send('2!')}, 2000);
+      setTimeout(() => {channel.send('1!')}, 3000);
       setTimeout(async () => {
         channel.send('**GO!**');
         bot.startedAt = new Date();
