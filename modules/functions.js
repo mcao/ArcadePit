@@ -117,7 +117,6 @@ module.exports = (bot) => {
 
     async function checkForEvent(bot) {
       var events = await bot.database.getFutureEvents();
-      console.log(events);
 
       for (var i = 0; i < events.length; i++) {
         var date = new Date(events[i].time),
@@ -138,8 +137,8 @@ module.exports = (bot) => {
           }, timeAway);
         }
       }
-      setTimeout(function () {
-        checkForEvent(bot).then(() => {});
+      setTimeout(async function () {
+        await checkForEvent(bot);
       }, 30000);
     }
     await checkForEvent(bot);
