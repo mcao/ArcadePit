@@ -119,6 +119,7 @@ module.exports = (bot) => {
       var events = await bot.database.getFutureEvents();
 
       for (var i = 0; i < events.length; i++) {
+        console.log(i);
         var date = new Date(events[i].time),
           timeAway = date - new Date();
 
