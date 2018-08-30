@@ -1,6 +1,6 @@
 exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unused-vars
   await bot.database.delete(args.join(' '));
-  msg.reply(`successfully deleted the **${eventname}** race!`);
+  msg.reply(`successfully deleted the **${args.join(' ')}** race!`);
 };
 
 exports.conf = {

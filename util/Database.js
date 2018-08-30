@@ -244,7 +244,7 @@ exports.delete = async (eventName) => {
   var event = await getEvent(eventName);
   await Events.destroy({
     where: {
-      name: eventName
+      id: event.id
     }
   })
 };
