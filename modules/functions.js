@@ -111,7 +111,8 @@ module.exports = (bot) => {
     async function sendReminder(eventName, date, lastReminder) {
       var event = await bot.database.getEvent(eventName);
       await bot.database.setLastReminder(lastReminder, event.id);
-      bot.openEvent.lastReminderSent = lastReminder;
+      event.lastReminderSent = lastReminder;
+      await bot.database.sync(event);
       channel.send(`<@&${bot.config.raceRole}>: **${event.name}** is starting **${moment(new Date(date).toISOString()).fromNow()}!**`);
     }
 
