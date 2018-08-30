@@ -86,7 +86,7 @@ module.exports = (bot) => {
       else str = secs;
       return Math.floor(seconds / 60) + ":" + str
     }
-    scores = "Standings for **" + event.name + "**:";
+    scores = "__Standings for **" + event.name + "**:__\n";
     for(var i = 0; i < event.standings.length; i++) {
       if (event.timed) {
         if (event.participants[event.standings[i]].time != 'DND')
