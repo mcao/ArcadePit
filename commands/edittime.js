@@ -17,7 +17,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
     else if (bot.event.standings[i] == msg.mentions.users.first().id)
       bot.event.standings.splice(i, 1);
   }
-  msg.reply(`${msg.mentions.users.first()}'s time has been changed to **${args[1]}**!`);
+  msg.reply(`${msg.mentions.users.first().user}'s time has been changed to **${args[1]}**!`);
 };
 
 exports.conf = {
