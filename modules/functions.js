@@ -133,7 +133,7 @@ module.exports = (bot) => {
         if (timeAway < MINUTE * 5 && events[i].lastReminderSent < 4) {
           await sendReminder(events[i], date, 4);
           setTimeout(async function () {
-            bot.startEvent(bot, events[i]);
+            await bot.startEvent(bot, events[i]);
           }, timeAway);
         }
       }
