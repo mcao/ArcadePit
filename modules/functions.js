@@ -88,15 +88,15 @@ module.exports = (bot) => {
           timeAway = date - new Date();
 
         if (timeAway < MINUTE * 1440 && events[i].lastReminderSent < 1)
-          sendReminder(events[i].name, date, 1);
+          await sendReminder(events[i].name, date, 1);
         if (timeAway < MINUTE * 60 && events[i].lastReminderSent < 2)
-          sendReminder(events[i].name, date, 2);
+          await sendReminder(events[i].name, date, 2);
         if (timeAway < MINUTE * 30 && !events[i].open)
-          openEvent(events[i]);
+          await openEvent(events[i]);
         if (timeAway < MINUTE * 10 && events[i].lastReminderSent < 3)
-          sendReminder(events[i].name, date, 3);
+          await sendReminder(events[i].name, date, 3);
         if (timeAway < MINUTE * 5 && events[i].lastReminderSent < 4) {
-          sendReminder(events[i], date, 4);
+          await sendReminder(events[i], date, 4);
           setTimeout(async function () {
             bot.startEvent(bot, events[i]);
           }, timeAway);
@@ -108,13 +108,13 @@ module.exports = (bot) => {
     }
     await checkForEvent(bot);
 
-    function sendReminder(event, date, lastReminder) {
+    async function sendReminder(event, date, lastReminder) {
       await bot.database.setLastReminder(lastReminder, event.id);
       bot.openEvent.lastReminderSent = lastReminder;
       channel.send(`<@&${bot.config.raceRole}>: **${event.name}** is starting **${moment(new Date(date).toISOString()).fromNow()}!**`);
     }
 
-    function openEvent(event) {
+    async function openEvent(event) {
       channel.send(`<@&${bot.config.raceRole}>: You may now set yourself as ready for **${event.name}**!`);
       await bot.database.openEvent(event.id);
       bot.openEvent = event;
