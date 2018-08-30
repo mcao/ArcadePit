@@ -250,7 +250,7 @@ exports.delete = async (eventName) => {
 };
 
 exports.sync = async (event) => {
-  await Events.update(event.dataValues, {
+  await Events.update(event, {
     where: {
       id: event.id
     }
@@ -258,7 +258,7 @@ exports.sync = async (event) => {
 }
 
 exports.getFutureEvents = async () => {
-  return await Events.findAll({
+  return Events.findAll({
     where: {
       started: false
     }
