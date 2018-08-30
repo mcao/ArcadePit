@@ -67,13 +67,46 @@ module.exports = (bot) => {
     bot.eventInProgress = false;
     bot.startedAt = null;
     await bot.database.sync(bot.event);
-    bot.channels.get(bot.config.raceChannel).send('<@&' + bot.config.raceRole + '>: The ' + bot.event.name + ' event has ended!');
-    // bot.sendStandings(bot.event);
+    bot.channels.get(bot.config.raceChannel).send('<@&' + bot.config.raceRole + '>: The **' + bot.event.name + '** event has ended!');
+    bot.sendStandings(bot.event);
     setTimeout(async () => {
       await bot.database.sync(bot.event);
       bot.event = null;
     }, MINUTE * 10);
   };
+
+  /**
+   * Function that sends the standings of an event to a channel.
+   */
+  bot.sendStandings = (event) => {
+    function stm(seconds) {
+      secs = (seconds - (Math.floor(seconds / 60) * 60))
+      if (secs == 0) str = "00";
+      else if (secs < 10) str = "0" + secs;
+      else str = secs;
+      return Math.floor(seconds / 60) + ":" + str
+    }
+    scores = "Standings for **" + event.name + "**:";
+    for(var i = 0; i < event.standings.length; i++) {
+      if (event.timed) {
+        if (event.participants[event.standings[i]].time != 'DND')
+          scores += `<@${event.standings[i]}>: ${stm(event.participants[event.standings[i]].time)}\n`
+      } else {
+        if (event.participants[event.standings[i]].score != 'DND')
+          scores += `<@${event.standings[i]}>: ${event.participants[event.standings[i]].score}\n`
+      }
+    }
+    for(var i = 0; i < event.standings.length; i++) {
+      if (event.timed) {
+        if (event.participants[event.standings[i]].time == 'DND')
+          scores += `<@${event.standings[i]}>: DND\n`
+      } else {
+        if (event.participants[event.standings[i]].score == 'DND')
+          scores += `<@${event.standings[i]}>: DND\n`
+      }
+    }
+    bot.channels.get(bot.config.raceChannel).send(scores);
+  }
 
   /**
    * Function that executes every 30 seconds and checks if reminders 
