@@ -67,7 +67,7 @@ module.exports = (bot) => {
     bot.eventInProgress = false;
     bot.startedAt = null;
     bot.sendStandings(bot.event);
-    setTimeout(() => {
+    setTimeout(async () => {
       await bot.database.sync(bot.event);
       bot.event = null;
     }, MINUTE * 10);
