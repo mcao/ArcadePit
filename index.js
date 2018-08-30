@@ -6,13 +6,13 @@ const readdir = promisify(require('fs').readdir);
 const Enmap = require('enmap');
 const bot = new Discord.Client();
 
-require('./modules/functions.js')(bot);
-
 bot.config = require('./config.js');
 bot.logger = require('./util/Logger');
 bot.database = require('./util/Database');
 bot.commands = new Enmap();
 bot.aliases = new Enmap();
+
+require('./modules/functions.js')(bot);
 
 const init = async () => {
   const cmdFiles = await readdir('./commands/');
