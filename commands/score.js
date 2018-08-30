@@ -10,6 +10,12 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
   bot.event.participants[msg.author.id].finished = true;
   bot.event.standings.push(msg.author.id);
   msg.reply('you have finished **' + bot.event.name + '**, with a score of **' + args[0] + '**!');
+
+  var finished = true;
+  for(var key in bot.event.participants) {
+    if (!bot.event.participants[key].finished) finished = false;
+  }
+  if (finished) bot.endEvent();
 };
 
 exports.conf = {
