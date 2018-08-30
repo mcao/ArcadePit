@@ -66,7 +66,8 @@ module.exports = (bot) => {
     bot.event.participants = players;
     bot.eventInProgress = false;
     bot.startedAt = null;
-    bot.sendStandings(bot.event);
+    await bot.database.sync(bot.event);
+    // bot.sendStandings(bot.event);
     setTimeout(async () => {
       await bot.database.sync(bot.event);
       bot.event = null;
