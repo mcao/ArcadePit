@@ -2,7 +2,6 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
   if (!bot.eventInProgress || !bot.event) return msg.channel.send('No event appears to be in progress!');
   else {
     bot.event.forciblyEnded = true;
-    msg.channel.send('<@&' + bot.config.raceRole + '>: The ' + bot.event.name + ' event has ended!');
     await bot.endEvent();
   }
 };

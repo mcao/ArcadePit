@@ -67,6 +67,7 @@ module.exports = (bot) => {
     bot.eventInProgress = false;
     bot.startedAt = null;
     await bot.database.sync(bot.event);
+    bot.channels.get(bot.config.raceChannel).send('<@&' + bot.config.raceRole + '>: The ' + bot.event.name + ' event has ended!');
     // bot.sendStandings(bot.event);
     setTimeout(async () => {
       await bot.database.sync(bot.event);
