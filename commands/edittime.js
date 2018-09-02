@@ -6,14 +6,14 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
   var time = /[0-9]?[0-9]:[0-9][0-9]/g;
   if (!time.exec(args[0])) return msg.reply('the score must be in MM:SS format!');
 
-  ms = args[0].split(':');
+  var ms = args[0].split(':');
   if (isNaN(ms[0]) | isNaN(ms[1])) return msg.reply('both MM and SS must be numbers!');
   time = (Number(ms[0]) * 60) + Number(ms[1]);
 
   bot.event.participants[msg.mentions.users.first().id].time = time;
   for (var i = 0; i < bot.event.standings.length; i++) {
     if (bot.event.participants[bot.event.standings[i]].time > time)
-      bot.event.standings.splice(i, 0, msg.mentions.users.first().id)
+      bot.event.standings.splice(i, 0, msg.mentions.users.first().id);
     else if (bot.event.standings[i] == msg.mentions.users.first().id)
       bot.event.standings.splice(i, 1);
   }

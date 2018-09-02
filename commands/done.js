@@ -7,7 +7,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
   if (!time.exec(args[0])) return msg.reply('the score must be in MM:SS format!');
   if (!bot.event.participants[msg.author.id].started) return msg.reply('you are not participating in this race!');
 
-  ms = args[0].split(':');
+  var ms = args[0].split(':');
   if (isNaN(ms[0]) | isNaN(ms[1])) return msg.reply('both MM and SS must be numbers!');
   time = (Number(ms[0]) * 60) + Number(ms[1]);
 
@@ -17,7 +17,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
   msg.reply('you have finished **' + bot.event.name + '**, with a time of **' + args[0] + '**!');
 
   var finished = true;
-  for(var key in bot.event.participants) {
+  for (var key in bot.event.participants) {
     if (!bot.event.participants[key].finished) finished = false;
   }
   if (finished) bot.endEvent();

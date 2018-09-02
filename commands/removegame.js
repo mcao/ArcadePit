@@ -3,10 +3,10 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
   if (gamelist.indexOf(args.join(' ')) > -1) {
     gamelist.splice(gamelist[gamelist.indexOf(args.join(' '))], 1);
     require('fs').writeFileSync('./games.json', JSON.stringify(gamelist));
-    delete require.cache[require.resolve('../games.json')]
-    msg.reply(args.join(' ') + " has been successfully removed from the game list!");
+    delete require.cache[require.resolve('../games.json')];
+    msg.reply(args.join(' ') + ' has been successfully removed from the game list!');
   } else {
-    msg.reply(args.join(' ') + " is not on the game list!");
+    msg.reply(args.join(' ') + ' is not on the game list!');
   }
 };
 

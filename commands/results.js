@@ -6,9 +6,9 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
   var event = await bot.database.getEvent(args.join(' '));
 
   if (bot.openEvent && event.name == bot.openEvent.name)
-    event = bot.openEvent
+    event = bot.openEvent;
   else if (bot.event && event.name == bot.event.name)
-    event = bot.event
+    event = bot.event;
 
   var embed = new MessageEmbed()
     .setTitle(`Results for ${event.name}`, bot.user.displayAvatarURL())
@@ -24,18 +24,18 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
     if (event.participants[key].finished) {
       finished += '<@' + key + '> (' + event.participants[key].time + ' seconds)\n';
     } else if (!event.participants[key].finished && event.participants[key].time != 0) {
-      dnf += '<@' + key + '> (DNF, ' + event.participants[key].time + ' seconds)\n'
+      dnf += '<@' + key + '> (DNF, ' + event.participants[key].time + ' seconds)\n';
     } else if (!event.participants[key].finished && event.participants[key].time == 0) {
-      stillPlaying += '<@' + key + '> (Not Finished)\n'
+      stillPlaying += '<@' + key + '> (Not Finished)\n';
     }
   }
 
   if (finished != '')
-    embed.addField('Finished', finished)
+    embed.addField('Finished', finished);
   if (dnf != '')
-    embed.addField('Forfeited', dnf)
+    embed.addField('Forfeited', dnf);
   if (stillPlaying != '')
-    embed.addField('Still Playing / Not Started', stillPlaying)
+    embed.addField('Still Playing / Not Started', stillPlaying);
 
   msg.channel.send({
     embed: embed

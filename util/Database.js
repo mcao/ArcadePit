@@ -65,7 +65,7 @@ const Events = sequelize.define('events', {
   },
 }, {
   getterMethods: {
-    externalID: function () {
+    externalID: function() {
       return this.id % 100;
     }
   }
@@ -101,7 +101,7 @@ async function getEvent(nameOrID) {
 
 exports.getEvent = async (eventName) => {
   return getEvent(eventName);
-}
+};
 
 exports.initialize = () => {
   sequelize
@@ -166,7 +166,7 @@ exports.add = async (user, eventName) => {
         }
       });
     } else {
-      throw new Error('Error: This racer is already in the race!')
+      throw new Error('Error: This racer is already in the race!');
     }
   } else {
     throw new Error('Error: This race does not exist!');
@@ -188,7 +188,7 @@ exports.remove = async (user, eventName) => {
         }
       });
     } else {
-      throw new Error('Error: This racer is not in the race!')
+      throw new Error('Error: This racer is not in the race!');
     }
   } else {
     throw new Error('Error: This race does not exist!');
@@ -214,7 +214,7 @@ exports.removeAll = async (user) => {
         where: {
           id: events[i].id
         }
-      })
+      });
     }
   }
 };
@@ -246,7 +246,7 @@ exports.delete = async (eventName) => {
     where: {
       id: event.id
     }
-  })
+  });
 };
 
 exports.sync = async (event) => {
@@ -255,7 +255,7 @@ exports.sync = async (event) => {
       id: event.id
     }
   });
-}
+};
 
 exports.getFutureEvents = async () => {
   return Events.findAll({
@@ -265,7 +265,7 @@ exports.getFutureEvents = async () => {
   });
 };
 
-exports.setLastReminder = async(lastReminder, eventID) => {
+exports.setLastReminder = async (lastReminder, eventID) => {
   await Events.update({
     lastReminderSent: lastReminder
   }, {
@@ -275,7 +275,7 @@ exports.setLastReminder = async(lastReminder, eventID) => {
   });
 };
 
-exports.openEvent = async(eventID) => {
+exports.openEvent = async (eventID) => {
   await Events.update({
     open: true
   }, {

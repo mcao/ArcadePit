@@ -5,7 +5,7 @@ module.exports = (bot) => {
   /**
    * Function that checks if all players are ready and then begins the event.
    */
-  bot.startEvent = async (bot, e) => {
+  bot.startEvent = async (bot, e) => { // eslint-disable-line no-unused-vars
     if (!bot.openEvent) return;
     const channel = bot.channels.get(bot.config.raceChannel);
     var allReady = true;
@@ -20,14 +20,14 @@ module.exports = (bot) => {
       bot.logger.log('All participants are ready. Starting event...');
       bot.event = bot.openEvent, bot.openEvent = null;
       bot.eventInProgress = true;
-      for (var id in bot.event.participants) {
+      for (id in bot.event.participants) {
         bot.event.participants[id].started = true;
       }
 
       channel.send('<@&' + bot.config.raceRole + '>: ' + bot.event.name + ' is starting in 4 seconds!');
-      setTimeout(() => {channel.send('3!')}, 1000);
-      setTimeout(() => {channel.send('2!')}, 2000);
-      setTimeout(() => {channel.send('1!')}, 3000);
+      setTimeout(() => {channel.send('3!');}, 1000);
+      setTimeout(() => {channel.send('2!');}, 2000);
+      setTimeout(() => {channel.send('1!');}, 3000);
       setTimeout(async () => {
         channel.send('**GO!**');
         bot.startedAt = new Date();
@@ -35,13 +35,13 @@ module.exports = (bot) => {
         await bot.database.sync(bot.event);
       }, 4000);
     } else {
-      for (var id in bot.openEvent.participants) {
-        var notReady = "Not Ready:\n";
+      for (id in bot.openEvent.participants) {
+        var notReady = 'Not Ready:\n';
         if (!bot.openEvent.participants[id].ready)
           notReady += `<@${id}>`;
       }
       channel.send(notReady);
-      channel.send("Not everybody is ready yet! Aborting start...");
+      channel.send('Not everybody is ready yet! Aborting start...');
       setTimeout(bot.startEvent(), MINUTE * 5);
     }
   };
@@ -80,33 +80,33 @@ module.exports = (bot) => {
    */
   bot.sendStandings = (event) => {
     function stm(seconds) {
-      secs = (seconds - (Math.floor(seconds / 60) * 60))
-      if (secs == 0) str = "00";
-      else if (secs < 10) str = "0" + secs;
+      var secs = (seconds - (Math.floor(seconds / 60) * 60));
+      if (secs == 0) var str = '00';
+      else if (secs < 10) str = '0' + secs;
       else str = secs;
-      return Math.floor(seconds / 60) + ":" + str
+      return Math.floor(seconds / 60) + ':' + str;
     }
-    scores = "__Standings for **" + event.name + "**:__\n";
-    for(var i = 0; i < event.standings.length; i++) {
+    var scores = '__Standings for **' + event.name + '**:__\n';
+    for (var i = 0; i < event.standings.length; i++) {
       if (event.timed) {
         if (event.participants[event.standings[i]].time != 'DND')
-          scores += `<@${event.standings[i]}>: ${stm(event.participants[event.standings[i]].time)}\n`
+          scores += `<@${event.standings[i]}>: ${stm(event.participants[event.standings[i]].time)}\n`;
       } else {
         if (event.participants[event.standings[i]].score != 'DND')
-          scores += `<@${event.standings[i]}>: ${event.participants[event.standings[i]].score}\n`
+          scores += `<@${event.standings[i]}>: ${event.participants[event.standings[i]].score}\n`;
       }
     }
-    for(var i = 0; i < event.standings.length; i++) {
+    for (i = 0; i < event.standings.length; i++) {
       if (event.timed) {
         if (event.participants[event.standings[i]].time == 'DND')
-          scores += `<@${event.standings[i]}>: DND\n`
+          scores += `<@${event.standings[i]}>: DND\n`;
       } else {
         if (event.participants[event.standings[i]].score == 'DND')
-          scores += `<@${event.standings[i]}>: DND\n`
+          scores += `<@${event.standings[i]}>: DND\n`;
       }
     }
     bot.channels.get(bot.config.raceChannel).send(scores);
-  }
+  };
 
   /**
    * Function that executes every 30 seconds and checks if reminders 
@@ -132,12 +132,12 @@ module.exports = (bot) => {
           await sendReminder(events[i].name, date, 3);
         if (timeAway < MINUTE * 5 && events[i].lastReminderSent < 4) {
           await sendReminder(events[i], date, 4);
-          setTimeout(async function () {
+          setTimeout(async function() {
             await bot.startEvent(bot, events[i]);
           }, timeAway);
         }
       }
-      setTimeout(async function () {
+      setTimeout(async function() {
         await checkForEvent(bot);
       }, 30000);
     }
@@ -245,15 +245,15 @@ module.exports = (bot) => {
 
   // <String>.toPropercase() returns a proper-cased string such as: 
   // "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"
-  String.prototype.toProperCase = function () {
-    return this.replace(/([^\W_]+[^\s-]*) */g, function (txt) {
+  String.prototype.toProperCase = function() {
+    return this.replace(/([^\W_]+[^\s-]*) */g, function(txt) {
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
   };
 
   // <Array>.random() returns a single random element from an array
   // [1, 2, 3, 4, 5].random() can return 1, 2, 3, 4 or 5.
-  Array.prototype.random = function () {
+  Array.prototype.random = function() {
     return this[Math.floor(Math.random() * this.length)];
   };
 

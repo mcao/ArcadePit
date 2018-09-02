@@ -8,7 +8,7 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
   bot.event.participants[msg.author.id].score = 0;
   bot.event.participants[msg.author.id].finished = false;
   
-  for(var i = 0; i < bot.event.standings.length; i++) {
+  for (var i = 0; i < bot.event.standings.length; i++) {
     if (bot.event.standings[i] == msg.mentions.users.first().id)
       bot.event.standings.splice(i, 1);
   }
