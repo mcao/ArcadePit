@@ -6,7 +6,7 @@ exports.run = async (bot, msg, args, level) => {
     .join(" ");
   if (msg.content.indexOf("|") < 0)
     return msg.channel.send(
-      'Please include the name and date of the event, as well as "timed" or "scored", split by "|"!'
+      'Please include the name and date of the event, as well as "timed" or "scored", split by "|"! (All on one line!)'
     );
   if (msg.content.split("|").length < 3)
     return msg.channel.send("You are missing one or more arguments!");

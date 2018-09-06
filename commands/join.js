@@ -1,17 +1,30 @@
 exports.run = async (bot, msg, args, level) => {
-  // eslint-disable-line no-unused-vars
   if (!msg.member.roles.get(bot.config.raceRole))
     return msg.reply("to participate in event, you must be a Racer!");
+
+  var event = await bot.database.getEvent(args.join(" "));
+
   if (
     bot.openEvent &&
-    bot.openEvent.name.toLowerCase() == args.join(" ").toLowerCase()
-  )
-    return msg.reply("this event is already open!");
-  try {
-    await bot.database.add(msg.author, args.join(" "));
-    msg.reply("you have been added to **" + args.join(" ") + "**!");
-  } catch (err) {
-    msg.channel.send(err.message);
+    bot.openEvent.name.toLowerCase() == event.name &&
+    !bot.openEvent.participants[user.id]
+  ) {
+    bot.openEvent.participants[user.id] = {
+      ready: false,
+      started: false,
+      finished: false,
+      time: 0,
+      score: 0
+    };
+    await bot.database.sync(bot.openEvent);
+    msg.reply("you have been added to **" + bot.openEvent.name + "**!");
+  } else {
+    try {
+      await bot.database.add(msg.author, args.join(" "));
+      msg.reply("you have been added to **" + args.join(" ") + "**!");
+    } catch (err) {
+      msg.channel.send(err.message);
+    }
   }
 };
 

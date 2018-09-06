@@ -74,6 +74,7 @@ module.exports = bot => {
       }
     }
     bot.event.participants = players;
+    bot.event.ended = true;
     bot.eventInProgress = false;
     bot.startedAt = null;
     await bot.database.sync(bot.event);
