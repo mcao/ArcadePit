@@ -9,7 +9,7 @@ exports.run = async (bot, msg, args, level) => {
     return msg.reply("you are not participating in this race!");
 
   var yes = await bot.awaitReply(msg, "Are you sure?");
-  if (yes.toLowerCase() !== "yes" || yes.toLowerCase() !== "y")
+  if (yes.toLowerCase() !== "yes" && yes.toLowerCase() !== "y")
     return msg.reply("aborting forfeit...");
 
   if (bot.event.timed) bot.event.participants[msg.author.id].time = "DNF";
