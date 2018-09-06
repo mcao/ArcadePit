@@ -1,6 +1,7 @@
-exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unused-vars
+exports.run = async (bot, msg, args, level) => {
+  // eslint-disable-line no-unused-vars
   if (!bot.event) return;
-  bot.logger.log('Stopping and resetting event...');
+  bot.logger.log("Stopping and resetting event...");
   for (var id in bot.event.participants) {
     bot.event.participants[id] = {
       ready: false,
@@ -11,30 +12,35 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
     };
   }
   bot.startedAt = null;
-  await bot.database.Events.update({
-    started: false,
-    participants: bot.event.participants
-  }, {
-    where: {
-      id: bot.event.id
+  await bot.database.Events.update(
+    {
+      started: false,
+      participants: bot.event.participants
+    },
+    {
+      where: {
+        id: bot.event.id
+      }
     }
-  });
+  );
   bot.openEvent = bot.event;
   bot.eventInProgress = false;
   bot.event = null;
   var channel = bot.channels.get(bot.config.raceChannel);
-  channel.send('Stopping and resetting event... Please re-mark yourselves as ready and restart the race!');
+  channel.send(
+    "Stopping and resetting event... Please re-mark yourselves as ready and restart the race!"
+  );
 };
 
 exports.conf = {
   enabled: true,
   aliases: [],
-  permLevel: 'Moderator'
+  permLevel: "Moderator"
 };
 
 exports.help = {
-  name: 'restart',
-  category: 'Racing',
-  description: 'Restarts an event if something goes wrong.',
-  usage: 'restart'
+  name: "restart",
+  category: "Racing",
+  description: "Restarts an event if something goes wrong.",
+  usage: "restart"
 };

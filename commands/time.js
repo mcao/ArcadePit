@@ -1,7 +1,19 @@
-exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unused-vars
-  if (!bot.event && !bot.openEvent) return msg.channel.send('There is no event running or open right now!');
-  if (bot.event) return msg.channel.send(`**${bot.event.name}** has been running for ${hms((new Date() - bot.startedAt) / 1000)}`);
-  if (bot.openEvent) return msg.channel.send(`**${bot.openEvent.name}** will be starting in ${hms(new Date((bot.openEvent.time) - new Date()) / 1000)}`);
+exports.run = async (bot, msg, args, level) => {
+  // eslint-disable-line no-unused-vars
+  if (!bot.event && !bot.openEvent)
+    return msg.channel.send("There is no event running or open right now!");
+  if (bot.event)
+    return msg.channel.send(
+      `**${bot.event.name}** has been running for ${hms(
+        (new Date() - bot.startedAt) / 1000
+      )}`
+    );
+  if (bot.openEvent)
+    return msg.channel.send(
+      `**${bot.openEvent.name}** will be starting in ${hms(
+        new Date(bot.openEvent.time - new Date()) / 1000
+      )}`
+    );
 
   function hms(seconds) {
     var d = new Date(null);
@@ -13,12 +25,13 @@ exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unuse
 exports.conf = {
   enabled: true,
   aliases: [],
-  permLevel: 'User'
+  permLevel: "User"
 };
 
 exports.help = {
-  name: 'time',
-  category: 'Racing',
-  description: 'Returns the time until a race starts, or that a race has been going on.',
-  usage: 'time'
+  name: "time",
+  category: "Racing",
+  description:
+    "Returns the time until a race starts, or that a race has been going on.",
+  usage: "time"
 };

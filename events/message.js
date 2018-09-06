@@ -4,10 +4,15 @@ module.exports = (client, message) => {
   const settings = client.config.settings;
 
   if (message.content.indexOf(settings.prefix) !== 0) return;
-  const args = message.content.slice(settings.prefix.length).trim().split(/ +/g);
+  const args = message.content
+    .slice(settings.prefix.length)
+    .trim()
+    .split(/ +/g);
   const command = args.shift().toLowerCase();
   const level = client.permlevel(message);
-  const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command));
+  const cmd =
+    client.commands.get(command) ||
+    client.commands.get(client.aliases.get(command));
 
   if (!cmd) return;
 
@@ -16,10 +21,14 @@ module.exports = (client, message) => {
   message.author.permLevel = level;
 
   message.flags = [];
-  while (args[0] && args[0][0] === '-') {
+  while (args[0] && args[0][0] === "-") {
     message.flags.push(args.shift().slice(1));
   }
 
-  client.logger.cmd(`${client.config.permLevels.find(l => l.level === level).name} ${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`);
+  client.logger.cmd(
+    `${client.config.permLevels.find(l => l.level === level).name} ${
+      message.author.username
+    } (${message.author.id}) ran command ${cmd.help.name}`
+  );
   cmd.run(client, message, args, level);
 };

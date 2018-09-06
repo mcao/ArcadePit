@@ -1,31 +1,32 @@
-exports.run = async (bot, msg, args, level) => { // eslint-disable-line no-unused-vars
-  msg.channel.send('5!');
+exports.run = async (bot, msg, args, level) => {
+  // eslint-disable-line no-unused-vars
+  msg.channel.send("5!");
   setTimeout(() => {
-    msg.channel.send('4!');
+    msg.channel.send("4!");
   }, 1000);
   setTimeout(() => {
-    msg.channel.send('3!');
+    msg.channel.send("3!");
   }, 2000);
   setTimeout(() => {
-    msg.channel.send('2!');
+    msg.channel.send("2!");
   }, 3000);
   setTimeout(() => {
-    msg.channel.send('1!');
+    msg.channel.send("1!");
   }, 4000);
   setTimeout(() => {
-    msg.channel.send('**GO!**');
+    msg.channel.send("**GO!**");
   }, 5000);
 };
 
 exports.conf = {
   enabled: true,
   aliases: [],
-  permLevel: 'Moderator'
+  permLevel: "Moderator"
 };
 
 exports.help = {
-  name: 'countdown',
-  category: 'Utility',
-  description: 'Starts a countdown!',
-  usage: 'countdown'
+  name: "countdown",
+  category: "Utility",
+  description: "Starts a countdown!",
+  usage: "countdown"
 };

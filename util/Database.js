@@ -4,72 +4,82 @@
  * @description Useful database functions
  */
 
-const config = require('../config');
-const Sequelize = require('sequelize');
-const sequelize = new Sequelize(config.database.name, config.database.user, config.database.pass, { // eslint-disable-line no-unused-vars
-  dialect: 'postgres'
-});
+const config = require("../config");
+const Sequelize = require("sequelize");
+const sequelize = new Sequelize(
+  config.database.name,
+  config.database.user,
+  config.database.pass,
+  {
+    // eslint-disable-line no-unused-vars
+    dialect: "postgres"
+  }
+);
 
-const Events = sequelize.define('events', {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    unique: true,
-    primaryKey: true
+const Events = sequelize.define(
+  "events",
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      autoIncrement: true,
+      unique: true,
+      primaryKey: true
+    },
+    name: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      unique: true
+    },
+    creator: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    time: {
+      type: Sequelize.DATE,
+      allowNull: false,
+      unique: true
+    },
+    timed: {
+      type: Sequelize.BOOLEAN
+    },
+    participants: {
+      type: Sequelize.JSON
+    },
+    standings: {
+      type: Sequelize.ARRAY({
+        type: Sequelize.STRING
+      })
+    },
+    timeStarted: {
+      type: Sequelize.DATE
+    },
+    timeEnded: {
+      type: Sequelize.DATE
+    },
+    started: {
+      type: Sequelize.BOOLEAN
+    },
+    ended: {
+      type: Sequelize.BOOLEAN
+    },
+    lastReminderSent: {
+      type: Sequelize.INTEGER
+    },
+    open: {
+      type: Sequelize.BOOLEAN
+    },
+    forciblyEnded: {
+      type: Sequelize.BOOLEAN
+    }
   },
-  name: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    unique: true
-  },
-  creator: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  time: {
-    type: Sequelize.DATE,
-    allowNull: false,
-    unique: true
-  },
-  timed: {
-    type: Sequelize.BOOLEAN
-  },
-  participants: {
-    type: Sequelize.JSON
-  },
-  standings: {
-    type: Sequelize.ARRAY({
-      type: Sequelize.STRING
-    })
-  },
-  timeStarted: {
-    type: Sequelize.DATE
-  },
-  timeEnded: {
-    type: Sequelize.DATE
-  },
-  started: {
-    type: Sequelize.BOOLEAN
-  },
-  ended: {
-    type: Sequelize.BOOLEAN
-  },
-  lastReminderSent: {
-    type: Sequelize.INTEGER
-  },
-  open: {
-    type: Sequelize.BOOLEAN
-  },
-  forciblyEnded: {
-    type: Sequelize.BOOLEAN
-  },
-}, {
-  getterMethods: {
-    externalID: function() {
-      return this.id % 100;
+  {
+    getterMethods: {
+      externalID: function() {
+        return this.id % 100;
+      }
     }
   }
-});
+);
 
 exports.Events = Events;
 
@@ -99,7 +109,7 @@ async function getEvent(nameOrID) {
   }
 }
 
-exports.getEvent = async (eventName) => {
+exports.getEvent = async eventName => {
   return getEvent(eventName);
 };
 
@@ -107,28 +117,33 @@ exports.initialize = () => {
   sequelize
     .authenticate()
     .then(() => {
-      console.log('Connection has been established successfully.');
+      console.log("Connection has been established successfully.");
     })
     .catch(err => {
-      console.error('Unable to connect to the database:', err);
+      console.error("Unable to connect to the database:", err);
     });
 
   sequelize
     .sync()
     .then(() => {
-      console.log('Database Synchronized.');
+      console.log("Database Synchronized.");
     })
     .catch(err => {
-      console.error('Unable to synchronize with the database:', err);
+      console.error("Unable to synchronize with the database:", err);
     });
 };
 
-exports.create = (data) => {
-  if (!data) throw new TypeError('Cannot create an event without data!');
-  if (!data.name) throw new TypeError('Cannot create an event without a name!');
-  if (!data.creator) throw new TypeError('Cannot create an event without a creator (User ID)!');
-  if (!data.time) throw new TypeError('Cannot create an event without a time (timestamp)!');
-  if (data.timed == undefined) throw new TypeError('Cannot create an event without knowing whether it\'s timed!');
+exports.create = data => {
+  if (!data) throw new TypeError("Cannot create an event without data!");
+  if (!data.name) throw new TypeError("Cannot create an event without a name!");
+  if (!data.creator)
+    throw new TypeError("Cannot create an event without a creator (User ID)!");
+  if (!data.time)
+    throw new TypeError("Cannot create an event without a time (timestamp)!");
+  if (data.timed == undefined)
+    throw new TypeError(
+      "Cannot create an event without knowing whether it's timed!"
+    );
 
   return Events.create({
     name: data.name,
@@ -158,18 +173,21 @@ exports.add = async (user, eventName) => {
         time: 0,
         score: 0
       };
-      await Events.update({
-        participants: participants
-      }, {
-        where: {
-          id: event.id
+      await Events.update(
+        {
+          participants: participants
+        },
+        {
+          where: {
+            id: event.id
+          }
         }
-      });
+      );
     } else {
-      throw new Error('Error: This racer is already in the race!');
+      throw new Error("Error: This racer is already in the race!");
     }
   } else {
-    throw new Error('Error: This race does not exist!');
+    throw new Error("Error: This race does not exist!");
   }
 };
 
@@ -180,26 +198,29 @@ exports.remove = async (user, eventName) => {
 
     if (participants[user.id]) {
       delete participants[user.id];
-      await Events.update({
-        participants: participants
-      }, {
-        where: {
-          id: event.id
+      await Events.update(
+        {
+          participants: participants
+        },
+        {
+          where: {
+            id: event.id
+          }
         }
-      });
+      );
     } else {
-      throw new Error('Error: This racer is not in the race!');
+      throw new Error("Error: This racer is not in the race!");
     }
   } else {
-    throw new Error('Error: This race does not exist!');
+    throw new Error("Error: This race does not exist!");
   }
 };
 
-exports.removeAll = async (user) => {
+exports.removeAll = async user => {
   var events = await Events.findAll({
     where: {
       started: false,
-      ended: false,
+      ended: false
     }
   });
 
@@ -208,39 +229,45 @@ exports.removeAll = async (user) => {
 
     if (participants[user.id]) {
       delete participants[user.id];
-      await Events.update({
-        participants: participants
-      }, {
-        where: {
-          id: events[i].id
+      await Events.update(
+        {
+          participants: participants
+        },
+        {
+          where: {
+            id: events[i].id
+          }
         }
-      });
+      );
     }
   }
 };
 
-exports.cancel = async (eventName) => {
+exports.cancel = async eventName => {
   var event = await getEvent(eventName);
 
   if (event && !event.started) {
-    await Events.update({
-      started: true,
-      ended: true,
-      open: false,
-      forciblyEnded: true,
-    }, {
-      where: {
-        id: event.id
+    await Events.update(
+      {
+        started: true,
+        ended: true,
+        open: false,
+        forciblyEnded: true
+      },
+      {
+        where: {
+          id: event.id
+        }
       }
-    });
+    );
   } else if (event && event.started) {
-    throw new Error('Error: This race has already began!');
+    throw new Error("Error: This race has already began!");
   } else {
-    throw new Error('Error: This race does not exist!');
+    throw new Error("Error: This race does not exist!");
   }
 };
 
-exports.delete = async (eventName) => {
+exports.delete = async eventName => {
   var event = await getEvent(eventName);
   await Events.destroy({
     where: {
@@ -249,7 +276,7 @@ exports.delete = async (eventName) => {
   });
 };
 
-exports.sync = async (event) => {
+exports.sync = async event => {
   await Events.update(event.dataValues, {
     where: {
       id: event.id
@@ -266,21 +293,27 @@ exports.getFutureEvents = async () => {
 };
 
 exports.setLastReminder = async (lastReminder, eventID) => {
-  await Events.update({
-    lastReminderSent: lastReminder
-  }, {
-    where: {
-      id: eventID
+  await Events.update(
+    {
+      lastReminderSent: lastReminder
+    },
+    {
+      where: {
+        id: eventID
+      }
     }
-  });
+  );
 };
 
-exports.openEvent = async (eventID) => {
-  await Events.update({
-    open: true
-  }, {
-    where: {
-      id: eventID
+exports.openEvent = async eventID => {
+  await Events.update(
+    {
+      open: true
+    },
+    {
+      where: {
+        id: eventID
+      }
     }
-  });
+  );
 };

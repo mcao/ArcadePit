@@ -6,12 +6,12 @@ exports.run = async (client, message, args, level) => {
 exports.conf = {
   enabled: true,
   aliases: [],
-  permLevel: 'Bot Admin'
+  permLevel: "Bot Admin"
 };
 
 exports.help = {
-  name: 'mylevel',
-  category: 'System',
-  description: 'Tells you your permission level for the server you are in.',
-  usage: 'mylevel'
+  name: "mylevel",
+  category: "System",
+  description: "Tells you your permission level for the server you are in.",
+  usage: "mylevel"
 };

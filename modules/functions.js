@@ -1,11 +1,12 @@
-module.exports = (bot) => {
-  const moment = require('moment');
+module.exports = bot => {
+  const moment = require("moment");
   const MINUTE = 60000;
 
   /**
    * Function that checks if all players are ready and then begins the event.
    */
-  bot.startEvent = async (bot, e) => { // eslint-disable-line no-unused-vars
+  bot.startEvent = async (bot, e) => {
+    // eslint-disable-line no-unused-vars
     if (!bot.openEvent) return;
     const channel = bot.channels.get(bot.config.raceChannel);
     var allReady = true;
@@ -17,31 +18,42 @@ module.exports = (bot) => {
     }
 
     if (allReady) {
-      bot.logger.log('All participants are ready. Starting event...');
-      bot.event = bot.openEvent, bot.openEvent = null;
+      bot.logger.log("All participants are ready. Starting event...");
+      (bot.event = bot.openEvent), (bot.openEvent = null);
       bot.eventInProgress = true;
       for (id in bot.event.participants) {
         bot.event.participants[id].started = true;
       }
 
-      channel.send('<@&' + bot.config.raceRole + '>: ' + bot.event.name + ' is starting in 4 seconds!');
-      setTimeout(() => {channel.send('3!');}, 1000);
-      setTimeout(() => {channel.send('2!');}, 2000);
-      setTimeout(() => {channel.send('1!');}, 3000);
+      channel.send(
+        "<@&" +
+          bot.config.raceRole +
+          ">: " +
+          bot.event.name +
+          " is starting in 4 seconds!"
+      );
+      setTimeout(() => {
+        channel.send("3!");
+      }, 1000);
+      setTimeout(() => {
+        channel.send("2!");
+      }, 2000);
+      setTimeout(() => {
+        channel.send("1!");
+      }, 3000);
       setTimeout(async () => {
-        channel.send('**GO!**');
+        channel.send("**GO!**");
         bot.startedAt = new Date();
         bot.event.started = true;
         await bot.database.sync(bot.event);
       }, 4000);
     } else {
       for (id in bot.openEvent.participants) {
-        var notReady = 'Not Ready:\n';
-        if (!bot.openEvent.participants[id].ready)
-          notReady += `<@${id}>`;
+        var notReady = "Not Ready:\n";
+        if (!bot.openEvent.participants[id].ready) notReady += `<@${id}>`;
       }
       channel.send(notReady);
-      channel.send('Not everybody is ready yet! Aborting start...');
+      channel.send("Not everybody is ready yet! Aborting start...");
       setTimeout(bot.startEvent(), MINUTE * 5);
     }
   };
@@ -56,18 +68,24 @@ module.exports = (bot) => {
     var players = bot.event.participants;
     for (var id in players) {
       if (bot.event.timed) {
-        if (!players[id].finished)
-          players[id].time = -1;
+        if (!players[id].finished) players[id].time = -1;
       } else {
-        if (!players[id].finished)
-          players[id].score = -1;
+        if (!players[id].finished) players[id].score = -1;
       }
     }
     bot.event.participants = players;
     bot.eventInProgress = false;
     bot.startedAt = null;
     await bot.database.sync(bot.event);
-    bot.channels.get(bot.config.raceChannel).send('<@&' + bot.config.raceRole + '>: The **' + bot.event.name + '** event has ended!');
+    bot.channels
+      .get(bot.config.raceChannel)
+      .send(
+        "<@&" +
+          bot.config.raceRole +
+          ">: The **" +
+          bot.event.name +
+          "** event has ended!"
+      );
     bot.sendStandings(bot.event);
     setTimeout(async () => {
       await bot.database.sync(bot.event);
@@ -78,30 +96,34 @@ module.exports = (bot) => {
   /**
    * Function that sends the standings of an event to a channel.
    */
-  bot.sendStandings = (event) => {
+  bot.sendStandings = event => {
     function stm(seconds) {
-      var secs = (seconds - (Math.floor(seconds / 60) * 60));
-      if (secs == 0) var str = '00';
-      else if (secs < 10) str = '0' + secs;
+      var secs = seconds - Math.floor(seconds / 60) * 60;
+      if (secs == 0) var str = "00";
+      else if (secs < 10) str = "0" + secs;
       else str = secs;
-      return Math.floor(seconds / 60) + ':' + str;
+      return Math.floor(seconds / 60) + ":" + str;
     }
-    var scores = '__Standings for **' + event.name + '**:__\n';
+    var scores = "__Standings for **" + event.name + "**:__\n";
     for (var i = 0; i < event.standings.length; i++) {
       if (event.timed) {
-        if (event.participants[event.standings[i]].time != 'DND')
-          scores += `<@${event.standings[i]}>: ${stm(event.participants[event.standings[i]].time)}\n`;
+        if (event.participants[event.standings[i]].time != "DND")
+          scores += `<@${event.standings[i]}>: ${stm(
+            event.participants[event.standings[i]].time
+          )}\n`;
       } else {
-        if (event.participants[event.standings[i]].score != 'DND')
-          scores += `<@${event.standings[i]}>: ${event.participants[event.standings[i]].score}\n`;
+        if (event.participants[event.standings[i]].score != "DND")
+          scores += `<@${event.standings[i]}>: ${
+            event.participants[event.standings[i]].score
+          }\n`;
       }
     }
     for (i = 0; i < event.standings.length; i++) {
       if (event.timed) {
-        if (event.participants[event.standings[i]].time == 'DND')
+        if (event.participants[event.standings[i]].time == "DND")
           scores += `<@${event.standings[i]}>: DND\n`;
       } else {
-        if (event.participants[event.standings[i]].score == 'DND')
+        if (event.participants[event.standings[i]].score == "DND")
           scores += `<@${event.standings[i]}>: DND\n`;
       }
     }
@@ -109,11 +131,11 @@ module.exports = (bot) => {
   };
 
   /**
-   * Function that executes every 30 seconds and checks if reminders 
+   * Function that executes every 30 seconds and checks if reminders
    * need to be sent and/or the event needs to be opened or started.
    */
-  bot.startWatchdog = async (bot) => {
-    bot.logger.log('Watchdog Started.');
+  bot.startWatchdog = async bot => {
+    bot.logger.log("Watchdog Started.");
 
     async function checkForEvent(bot) {
       var events = await bot.database.getFutureEvents();
@@ -148,11 +170,23 @@ module.exports = (bot) => {
       await bot.database.setLastReminder(lastReminder, event.id);
       event.lastReminderSent = lastReminder;
       await bot.database.sync(event);
-      bot.channels.get(bot.config.raceChannel).send(`<@&${bot.config.raceRole}>: **${event.name}** is starting **${moment(new Date(date).toISOString()).fromNow()}!**`);
+      bot.channels
+        .get(bot.config.raceChannel)
+        .send(
+          `<@&${bot.config.raceRole}>: **${event.name}** is starting **${moment(
+            new Date(date).toISOString()
+          ).fromNow()}!**`
+        );
     }
 
     async function openEvent(event) {
-      bot.channels.get(bot.config.raceChannel).send(`<@&${bot.config.raceRole}>: You may now set yourself as ready for **${event.name}**!`);
+      bot.channels
+        .get(bot.config.raceChannel)
+        .send(
+          `<@&${
+            bot.config.raceRole
+          }>: You may now set yourself as ready for **${event.name}**!`
+        );
       await bot.database.openEvent(event.id);
       bot.openEvent = event;
     }
@@ -170,7 +204,9 @@ module.exports = (bot) => {
   bot.permlevel = message => {
     let permlvl = 0;
 
-    const permOrder = bot.config.permLevels.slice(0).sort((p, c) => p.level > c.level ? 1 : -1);
+    const permOrder = bot.config.permLevels
+      .slice(0)
+      .sort((p, c) => (p.level > c.level ? 1 : -1));
 
     while (permOrder.length) {
       const currentLevel = permOrder.shift();
@@ -200,7 +236,7 @@ module.exports = (bot) => {
       const collected = await msg.channel.awaitMessages(filter, {
         max: 1,
         time: limit,
-        errors: ['time']
+        errors: ["time"]
       });
       return collected.first().content;
     } catch (e) {
@@ -208,7 +244,7 @@ module.exports = (bot) => {
     }
   };
 
-  bot.loadCommand = (commandName) => {
+  bot.loadCommand = commandName => {
     try {
       const props = require(`../commands/${commandName}`);
       bot.logger.log(`Loading Command: ${props.help.name}`);
@@ -225,14 +261,15 @@ module.exports = (bot) => {
     }
   };
 
-  bot.unloadCommand = async (commandName) => {
+  bot.unloadCommand = async commandName => {
     let command;
     if (bot.commands.has(commandName)) {
       command = bot.commands.get(commandName);
     } else if (bot.aliases.has(commandName)) {
       command = bot.commands.get(bot.aliases.get(commandName));
     }
-    if (!command) return `The command \`${commandName}\` doesn't seem to exist, nor is it an alias. Try again!`;
+    if (!command)
+      return `The command \`${commandName}\` doesn't seem to exist, nor is it an alias. Try again!`;
 
     if (command.shutdown) {
       await command.shutdown(bot);
@@ -243,7 +280,7 @@ module.exports = (bot) => {
 
   /* MISCELANEOUS NON-CRITICAL FUNCTIONS */
 
-  // <String>.toPropercase() returns a proper-cased string such as: 
+  // <String>.toPropercase() returns a proper-cased string such as:
   // "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"
   String.prototype.toProperCase = function() {
     return this.replace(/([^\W_]+[^\s-]*) */g, function(txt) {
@@ -257,13 +294,13 @@ module.exports = (bot) => {
     return this[Math.floor(Math.random() * this.length)];
   };
 
-  process.on('uncaughtException', (err) => {
-    const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, 'g'), './');
+  process.on("uncaughtException", err => {
+    const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, "g"), "./");
     bot.logger.error(`Uncaught Exception: ${errorMsg}`);
     process.exit(1);
   });
 
-  process.on('unhandledRejection', err => {
+  process.on("unhandledRejection", err => {
     bot.logger.error(`Unhandled rejection: ${err}`);
   });
 };
