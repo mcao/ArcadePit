@@ -17,8 +17,8 @@ exports.conf = {
 };
 
 exports.help = {
-  name: "game",
+  name: "games",
   category: "Racing",
-  description: "Displays  the game list.",
-  usage: "game"
+  description: "Displays the game list.",
+  usage: "games"
 };
