@@ -1,5 +1,5 @@
 exports.run = async (bot, msg, args, level) => {
-  if (args.indexOf("|") < -1)
+  if (args.join(" ").indexOf("|") < -1)
     return msg.reply(
       "please specify a game name and console name, separated with a '|'!"
     );
