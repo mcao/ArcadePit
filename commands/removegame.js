@@ -1,7 +1,7 @@
 exports.run = async (bot, msg, args, level) => {
   // eslint-disable-line no-unused-vars
   var gamelist = require("../games.json");
-  if (findGame(gamelist, args.join(" ")) != false) {
+  if (!isNaN(findGame(gamelist, args.join(" ")))) {
     gamelist.splice(gamelist[findGame(gamelist, args.join(" "))], 1);
     require("fs").writeFileSync("./games.json", JSON.stringify(gamelist));
     delete require.cache[require.resolve("../games.json")];
@@ -14,7 +14,6 @@ exports.run = async (bot, msg, args, level) => {
 
   function findGame(games, name) {
     for (var i = 0; i < games.length; i++) {
-      console.log(games[i].name.toLowerCase(), name.toLowerCase());
       if (games[i].name.toLowerCase() == name.toLowerCase()) {
         return i;
       }
