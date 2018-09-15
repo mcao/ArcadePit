@@ -1,7 +1,8 @@
 exports.run = async (bot, msg, args, level) => {
   // eslint-disable-line no-unused-vars
   var gamelist = require("../games.json");
-  if (findGame(gamelist, args.join(" "))) {
+  console.log(gamelist);
+  if (findGame(gamelist, args.join(" ")) != false) {
     gamelist.splice(gamelist[findGame(gamelist, args.join(" "))], 1);
     require("fs").writeFileSync("./games.json", JSON.stringify(gamelist));
     delete require.cache[require.resolve("../games.json")];
