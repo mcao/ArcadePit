@@ -1,7 +1,6 @@
 exports.run = async (bot, msg, args, level) => {
   // eslint-disable-line no-unused-vars
   var gamelist = require("../games.json");
-  console.log(gamelist);
   if (findGame(gamelist, args.join(" ")) != false) {
     gamelist.splice(gamelist[findGame(gamelist, args.join(" "))], 1);
     require("fs").writeFileSync("./games.json", JSON.stringify(gamelist));
@@ -15,6 +14,7 @@ exports.run = async (bot, msg, args, level) => {
 
   function findGame(games, name) {
     for (var i = 0; i < games.length; i++) {
+      console.log(games[i].name.toLowerCase(), name.toLowerCase());
       if (games[i].name.toLowerCase() == name.toLowerCase()) {
         return i;
       }
