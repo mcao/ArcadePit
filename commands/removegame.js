@@ -1,8 +1,8 @@
 exports.run = async (bot, msg, args, level) => {
   // eslint-disable-line no-unused-vars
   var gamelist = require("../games.json");
-  if (gamelist.indexOf(args.join(" ")) > -1) {
-    gamelist.splice(gamelist[gamelist.indexOf(args.join(" "))], 1);
+  if (findGame(args.join(" "))) {
+    gamelist.splice(gamelist[findGame(args.join(" "))], 1);
     require("fs").writeFileSync("./games.json", JSON.stringify(gamelist));
     delete require.cache[require.resolve("../games.json")];
     msg.reply(
@@ -10,6 +10,15 @@ exports.run = async (bot, msg, args, level) => {
     );
   } else {
     msg.reply(args.join(" ") + " is not on the game list!");
+  }
+
+  function findGame(games, name) {
+    for (var i = 0; i < games.length; i++) {
+      if (games[i].name.toLowerCase() == name.toLowerCase()) {
+        return i;
+      }
+    }
+    return false;
   }
 };
 

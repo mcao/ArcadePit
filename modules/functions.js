@@ -106,14 +106,16 @@ module.exports = bot => {
       return Math.floor(seconds / 60) + ":" + str;
     }
     var scores = "__Standings for **" + event.name + "**:__\n";
-    for (var i = 0; i < event.standings.length; i++) {
-      if (event.timed) {
-        if (event.participants[event.standings[i]].time != "DND")
+    if (event.timed) {
+      for (var i = 0; i < event.standings.length; i++) {
+        if (event.participants[event.standings[i]].time != "DNF")
           scores += `<@${event.standings[i]}>: ${stm(
             event.participants[event.standings[i]].time
           )}\n`;
-      } else {
-        if (event.participants[event.standings[i]].score != "DND")
+      }
+    } else {
+      for (var i = event.standings.length - 1; i > -1; i++) {
+        if (event.participants[event.standings[i]].score != "DNF")
           scores += `<@${event.standings[i]}>: ${
             event.participants[event.standings[i]].score
           }\n`;
@@ -121,11 +123,11 @@ module.exports = bot => {
     }
     for (i = 0; i < event.standings.length; i++) {
       if (event.timed) {
-        if (event.participants[event.standings[i]].time == "DND")
-          scores += `<@${event.standings[i]}>: DND\n`;
+        if (event.participants[event.standings[i]].time == "DNF")
+          scores += `<@${event.standings[i]}>: DNF\n`;
       } else {
-        if (event.participants[event.standings[i]].score == "DND")
-          scores += `<@${event.standings[i]}>: DND\n`;
+        if (event.participants[event.standings[i]].score == "DNF")
+          scores += `<@${event.standings[i]}>: DNF\n`;
       }
     }
     bot.channels.get(bot.config.raceChannel).send(scores);

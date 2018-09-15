@@ -2,11 +2,24 @@ exports.run = async (bot, msg, args, level) => {
   // eslint-disable-line no-unused-vars
   var gamelist = require("../games.json");
   if (gamelist.length < 3 && gamelist.length > 0) {
-    msg.channel.send(gamelist.join(", "));
+    var str = "Game List:\n";
+
+    for (var i = 0; i < gamelist.length; i++) {
+      str += i + ": " + gamelist[i].name + " || " + gamelist[i].console + "\n";
+    }
+
+    msg.channel.send(str);
   } else if (gamelist == 0) {
     msg.channel.send("There are no games in the list!");
   } else {
-    msg.channel.send(getRandom(gamelist, 3).join(", "));
+    gamelist = getRandom(gamelist, 3);
+    var str = "Game List:\n";
+
+    for (var i = 0; i < gamelist.length; i++) {
+      str += i + ": " + gamelist[i].name + " || " + gamelist[i].console + "\n";
+    }
+
+    msg.channel.send(str);
   }
 
   function getRandom(arr, n) {
