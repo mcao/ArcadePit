@@ -176,7 +176,7 @@ module.exports = bot => {
       bot.channels
         .get(bot.config.raceChannel)
         .send(
-          `<@&${bot.config.raceRole}>: **${event.name}** is starting **${moment(
+          `**${event.name}** is starting **${moment(
             new Date(date).toISOString()
           ).fromNow()}!**`
         );

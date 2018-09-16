@@ -6,10 +6,10 @@ exports.run = async (bot, msg, args, level) => {
 
   if (
     bot.openEvent &&
-    bot.openEvent.name.toLowerCase() == event.name &&
-    !bot.openEvent.participants[user.id]
+    bot.openEvent.name.toLowerCase() == event.name.toLowerCase() &&
+    !bot.openEvent.participants[msg.author.id]
   ) {
-    bot.openEvent.participants[user.id] = {
+    bot.openEvent.participants[msg.author.id] = {
       ready: false,
       started: false,
       finished: false,
@@ -17,11 +17,13 @@ exports.run = async (bot, msg, args, level) => {
       score: 0
     };
     await bot.database.sync(bot.openEvent);
-    msg.reply("you have been added to **" + bot.openEvent.name + "**!");
+    msg.reply(
+      "you have been added to the open event **" + bot.openEvent.name + "**!"
+    );
   } else {
     try {
       await bot.database.add(msg.author, args.join(" "));
-      msg.reply("you have been added to **" + args.join(" ") + "**!");
+      msg.reply("you have been added to **" + event.name + "**!");
     } catch (err) {
       msg.channel.send(err.message);
     }
