@@ -14,18 +14,19 @@ exports.run = async (bot, msg, args, level) => {
   bot.event.participants[msg.author.id].score = args[0];
   bot.event.participants[msg.author.id].finished = true;
 
-  for (var i = 0; i < bot.event.standings.length; i++) {
-    if (bot.event.standings.length == 0) {
-      bot.event.standings.push(msg.author.id);
-      break;
+  if (bot.event.standings.length == 0) {
+    bot.event.standings.push(msg.author.id);
+  } else {
+    for (var i = 0; i < bot.event.standings.length; i++) {
+      if (i == bot.event.standings.length - 1) {
+        bot.event.standings.push(msg.author.id);
+        break;
+      }
+      if (bot.event.participants[bot.event.standings[i]].score > args[0])
+        bot.event.standings.splice(i, 0, msg.author.id);
     }
-    if (i == bot.event.standings.length - 1) {
-      bot.event.standings.push(msg.author.id);
-      break;
-    }
-    if (bot.event.participants[bot.event.standings[i]].score > args[0])
-      bot.event.standings.splice(i, 0, msg.author.id);
   }
+
   msg.reply(
     "you have finished **" +
       bot.event.name +

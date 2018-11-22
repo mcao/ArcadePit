@@ -10,8 +10,16 @@ exports.run = async (bot, msg, args, level) => {
       bot.openEvent.participants[msg.author.id]
     ) {
       delete bot.openEvent.participants[msg.author.id];
+    } else if (
+      bot.event &&
+      bot.event.name.toLowerCase() == event.name &&
+      bot.event.participants[msg.author.id]
+    ) {
+      delete bot.event.participants[msg.author.id];
+    } else {
+      await bot.database.remove(msg.author, args.join(" "));
     }
-    await bot.database.remove(msg.author, args.join(" "));
+
     msg.reply("successfully removed you from **" + event.name + "**!");
   } catch (err) {
     msg.reply(err);

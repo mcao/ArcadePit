@@ -114,7 +114,7 @@ module.exports = bot => {
           )}\n`;
       }
     } else {
-      for (var i = event.standings.length - 1; i > -1; i++) {
+      for (var i = event.standings.length - 1; i > -1; i--) {
         if (event.participants[event.standings[i]].score != "DNF")
           scores += `<@${event.standings[i]}>: ${
             event.participants[event.standings[i]].score
